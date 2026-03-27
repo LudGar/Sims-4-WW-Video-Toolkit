@@ -171,7 +171,6 @@ function generateBat() {
     const gAuthor = _v('vid-author');
     const gDesc = _v('vid-desc');
     const gIcon = _v('vid-icon') || '2F7D0004:00000000:D19DE7E9C0FA296B';
-    const gAsset = (_v() || '').toUpperCase().padStart(16, '0');
 
     const gFilename = _v('vid-filename');
     const gPrefix = gAuthor.replace(/\s+/g, '');
@@ -197,8 +196,6 @@ function generateBat() {
     const hAVI = gAVI.toString(16).toUpperCase().padStart(16, '0');
     const fnAVI = 'S4_376840D7_00000000_' + hAVI + '____AVI.avi';
     const fnIMG = 'S4_00B2D882_00000000_' + hAVI + '____IMG.dds';
-    const assetInXml = hAVI;
-    const assetInXml2 = hAVI;
 
     const ex = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const dLine = gDesc ? '\n   <T n="video_raw_display_description">' + ex(gDesc) + '</T>' : '';
@@ -223,7 +220,7 @@ function generateBat() {
         '   <T n="video_duration">' + gDur + '</T>',
         '   <T n="affordance">13310387700104523747</T>',
         '   <U n="new_client_state">',
-        '      <V n="video_playlist" t="apply_new_value"><V n="apply_new_value" t="start_video"><U n="start_video"><L n="clip_list"><T p="">376840D7:00000000:' + gAsset + '</T></L></U></V></V>',
+        '      <V n="video_playlist" t="apply_new_value"><V n="apply_new_value" t="start_video"><U n="start_video"><L n="clip_list"><T p="">376840D7:00000000:' + hAVI + '</T></L></U></V></V>',
         '      <V n="autonomy_modifiers" t="apply_new_value"><V n="apply_new_value" t="apply_statistic_modifiers"><U n="apply_statistic_modifiers"><U n="periodic_statistic_change"><T n="interval">60</T><L n="operations"><U><T n="amount">-1</T><T n="stat">16633</T></U></L></U></U></V></V>',
         '      <V n="broadcaster" t="apply_new_value"><V n="apply_new_value" t="start_broadcaster"><U n="start_broadcaster"><L n="broadcaster_types"><U><T n="item">74334</T></U></L></U></V></V>',
         '   </U>',
@@ -239,7 +236,7 @@ function generateBat() {
         '   <T n="display_name">0xA410004C</T>',
         '   <V n="display_tooltip" t="enabled"><T n="enabled">0xA410004D</T></V>',
         '   <V n="outcome" t="single"><U n="single"><U n="actions"><L n="basic_extras"><V t="loot"><U n="loot"><L n="loot_list"><T>13785909837673828001</T></L><U n="success_chance"><T n="base_chance">100</T></U><V n="timing" t="at_beginning"><U n="at_beginning" /></V></U></V></L><L n="continuation"><U><T n="affordance">10226610056</T><E n="target">Object</E></U></L></U></U></V>',
-        '   <V n="pie_menu_icon" t="enabled"><V n="enabled" t="resource_key"><U n="resource_key"><T n="key">00B2D882:00000000:' + gAsset + '</T></U></V></V>',
+        '   <V n="pie_menu_icon" t="enabled"><V n="enabled" t="resource_key"><U n="resource_key"><T n="key">00B2D882:00000000:' + hAVI + '</T></U></V></V>',
         '   <T n="pie_menu_priority">0</T>',
         '   <L n="test_globals"><V t="test_set_reference"><T n="test_set_reference">15610208496863675011</T></V></L>',
         '   <L n="tests"><L><V t="test_set_reference"><T n="test_set_reference">15610207397352046897</T></V><V t="test_set_reference"><T n="test_set_reference">15610207397352046905</T></V><V t="test_set_reference"><T n="test_set_reference">15610207397352046905</T></V></L></L>',
