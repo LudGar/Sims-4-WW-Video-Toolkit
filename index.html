@@ -1,226 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WickedWhims Video Toolkit</title>
-<link href="./styles.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WickedWhims Toolkit Video Studio</title>
+    <link href="./styles.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
 <body>
 
-<header>
-  <div class="logo">🎬</div>
-  <div>
-    <h1>WickedWhims <span>Video</span> Toolkit</h1>
-    <p>Sims 4 · Custom Video Mod Studio · WickedWhims</p>
-  </div>
-</header>
-
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('studio',this)">🎛 Studio</button>
-  <button class="tab-btn" onclick="switchTab('workflow',this)">📋 Full Workflow</button>
-</div>
-
-<!-- ═══════════ STUDIO TAB ═══════════ -->
-<div class="tab-panel active" id="panel-studio">
-<div class="container">
-
-<div class="three-col">
-
-  <!-- STEP 1: THUMBNAIL -->
-  <div class="section">
-    <div class="sh"><div class="snum">1</div><div class="stitle">Thumbnail Generator</div></div>
-    <div class="sbody">
-      <div class="field-row">
-        <div class="field">
-          <label>Style</label>
-          <select id="th-style">
-            <option value="dark">Dark Gold</option>
-            <option value="red">Dark Red</option>
-            <option value="purple">Dark Purple</option>
-            <option value="teal">Dark Teal</option>
-            <option value="minimal">Minimal Black</option>
-          </select>
+    <header>
+        <div class="logo" style="background:none;padding:0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 723 250" width="40" height="14" style="display:block">
+                <path fill="#B28BFF" fill-rule="evenodd" d="M427.2,101.509 C427.2,62.339 411.282,26.686 385.559,0.30 L344.369,48.967 C355.452,63.5 361.992,80.299 361.992,99.5 C361.992,145.950 320.810,183.991 270.0,183.991 C219.189,183.991 178.7,145.937 178.7,98.987 C178.7,80.278 184.547,62.981 195.630,48.942 L154.440,0.0 C128.717,26.659 112.997,62.315 112.997,101.491 C112.997,171.970 167.163,250.9 269.997,250.9 C371.314,250.9 427.2,171.979 427.2,101.509 Z" />
+                <path fill="#B28BFF" fill-rule="evenodd" d="M314.2,101.509 C314.2,62.339 298.282,26.686 272.559,0.30 L231.369,48.967 C242.452,63.5 248.992,80.299 248.992,99.5 C248.992,145.950 207.810,183.991 157.0,183.991 C106.189,183.991 65.7,145.937 65.7,98.987 C65.7,80.278 71.547,62.981 82.630,48.942 L41.440,0.0 C15.717,26.659 0.2,62.315 0.2,101.491 C0.2,171.970 54.163,250.9 156.997,250.9 C258.314,250.9 314.2,171.979 314.2,101.509 Z" />
+                <path fill="#DEC8FF" fill-rule="evenodd" d="M617.777,178.451 L617.765,59.510 C627.314,62.433 635.780,66.909 643.151,72.695 L680.25,31.963 C658.199,12.690 639.244,0.8 590.2,0.8 C540.759,0.8 521.760,12.635 499.921,31.824 L536.817,72.380 C544.195,66.617 552.671,62.228 562.231,59.381 L562.222,178.451 C562.222,178.451 569.702,185.185 590.841,185.185 C611.980,185.185 617.777,178.451 617.777,178.451 Z" />
+                <path fill="#B28BFF" fill-rule="evenodd" d="M722.156,125.8 C722.156,92.36 708.924,62.26 687.272,39.588 L652.600,80.780 C661.929,92.597 667.434,107.154 667.434,122.900 C667.434,162.415 632.769,194.437 590.0,194.437 C547.230,194.437 512.565,162.404 512.565,122.884 C512.565,107.136 518.70,92.577 527.399,80.759 L492.727,39.561 C471.75,62.2 457.843,92.16 457.843,124.992 C457.843,184.318 503.437,250.8 589.997,250.8 C675.281,250.8 722.156,184.326 722.156,125.8 Z" />
+            </svg>
         </div>
-        <div class="field">
-          <label>Size</label>
-          <select id="th-size">
-            <option value="128" selected>128×128 — in-game</option>
-            <option value="256">256×256 — 2× preview</option>
-            <option value="512">512×512 — full quality</option>
-          </select>
+        <div>
+            <h1>Wicked <span>Toolkit</span> Video Studio</h1>
+            <p>Sims 4 · Workshop for Video Generation</p>
         </div>
-      </div>
-      <div class="field-row">
-        <div class="field"><label>Overlay Opacity <span class="hint" id="th-opacity-val">60%</span></label><input type="range" id="th-opacity" min="0" max="100" value="60"></div>
-        <div class="field"><label>Background Image</label><input type="file" id="th-bg" accept="image/*" style="font-size:11px;padding:5px 9px"></div>
-      </div>
-      <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
-        <canvas id="thumb-canvas" width="128" height="128"></canvas>
-        <div class="thumb-side">
-          <div class="blue-box" style="font-size:11px">Title &amp; author are pulled from Step 3 automatically. Drop PNG into <code>Thumbnail\</code> for DDS conversion.</div>
-          <button class="btn-sm p" onclick="downloadThumb()" style="width:100%">⬇ Download PNG</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 3: VIDEO DETAILS -->
-  <div class="section">
-    <div class="sh"><div class="snum">3</div><div class="stitle">.package Details</div></div>
-    <div class="sbody">
-      <div class="field">
-        <label>Video Filename <span class="req">*</span><span class="hint">paste your .mp4 name (no extension) — auto-fills title</span></label>
-        <input type="text" id="vid-filename" class="mono" placeholder=" VIDEO DETAILS ..." autocomplete="off" spellcheck="false">
-      </div>
-      <div class="field-row">
-        <div class="field"><label>Display Title <span class="req">*</span><span class="hint">auto-filled · editable</span></label><input type="text" id="vid-title" placeholder="Name of Your Video"></div>
-        <div class="field"><label>Author <span class="req">*</span></label><input type="text" id="vid-author" placeholder="YourName"></div>
-      </div>
-      <div class="field"><label>Description<span class="hint">shown in WW channel selector</span></label><textarea id="vid-desc" placeholder="Description…"></textarea></div>
-    </div>
-  </div>
-
-  <!-- STEP 4: ORIENTATION & DURATION -->
-  <div class="section">
-    <div class="sh"><div class="snum">4</div><div class="stitle">Orientation &amp; Duration</div></div>
-    <div class="sbody">
-      <div class="field">
-        <label>Tags <span class="hint">Enter or comma to add</span></label>
-        <div class="tag-wrap" id="tag-wrap"><input type="text" id="tag-field" class="tag-field" placeholder=" ENTER YOUR TAGS …"></div>
-      </div>
-      <div class="field">
-        <label>Active values <span class="hint">written to XML</span></label>
-        <div class="orient-summary" id="orient-summary"><span class="os-empty">No tags selected</span></div>
-      </div>
-      <div class="field">
-        <label>Duration <span class="req">*</span><span class="hint">auto-converts to seconds</span></label>
-        <div class="dur-presets" style="margin-bottom:6px">
-          <button type="button" class="dur-pre" onclick="setDur(0,30)">0:30</button>
-          <button type="button" class="dur-pre" onclick="setDur(1,0)">1:00</button>
-          <button type="button" class="dur-pre" onclick="setDur(2,0)">2:00</button>
-          <button type="button" class="dur-pre" onclick="setDur(3,0)">3:00</button>
-          <button type="button" class="dur-pre" onclick="setDur(5,0)">5:00</button>
-          <button type="button" class="dur-pre" onclick="setDur(10,0)">10:00</button>
-        </div>
-        <div class="dur-grid">
-          <div class="field"><label>Minutes</label><input type="number" id="dur-min" min="0" max="999" value="0"></div>
-          <div class="dur-sep">:</div>
-          <div class="field"><label>Seconds</label><input type="number" id="dur-sec" min="0" max="59" value="0"></div>
-        </div>
-        <div class="dur-total" id="dur-total">0 seconds total</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 5: ENCODE SETTINGS -->
-  <div class="section">
-    <div class="sh"><div class="snum">5</div><div class="stitle">Encode Video</div></div>
-    <div class="sbody">
-      <div class="blue-box" style="font-size:11px">Configure encoding, then download the <code>.bat</code>. It encodes VP6, converts the thumbnail PNG to DDS, and writes the XML files — all in one run. Also needs <a href="https://github.com/microsoft/DirectXTex/releases" target="_blank">texconv</a> in <code>tools\texconv\</code> for DDS.</div>
-      <div class="field-row">
-        <div class="field">
-          <label>Resolution</label>
-          <select id="b-res">
-            <option value="480x272" selected>480×272 SD</option>
-            <option value="512x288">512×288 SD+</option>
-            <option value="640x272">640×272 wide</option>
-            <option value="1024x576">1024×576 HD</option>
-            <option value="320x176">320×176 small</option>
-            <option value="custom">Custom…</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Frame Rate</label>
-          <select id="b-fps">
-            <option value="15" selected>15 fps ✓</option>
-            <option value="24">24 fps</option>
-            <option value="30">30 fps</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Rate Control</label>
-          <select id="b-ratemode">
-            <option value="quant">CQP — Constant Quality</option>
-            <option value="cbr">CBR — Constant Bitrate</option>
-          </select>
-        </div>
-        <div class="field" id="quant-wrap">
-          <label>Quality <span class="hint" id="quant-hint">1=best, 63=worst</span></label>
-          <input type="range" id="b-quant" min="1" max="63" value="18">
-        </div>
-        <div class="field" id="cbr-wrap" style="display:none">
-          <label>Bitrate (kbps)</label>
-          <select id="b-cbr">
-            <option value="1000">1000 kbps</option>
-            <option value="1500">1500 kbps</option>
-            <option value="2000" selected>2000 kbps</option>
-            <option value="3000">3000 kbps</option>
-            <option value="4000">4000 kbps</option>
-            <option value="6000">6000 kbps</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Audio Sample Rate</label>
-          <select id="b-asr">
-            <option value="44100" selected>44100 Hz</option>
-            <option value="22050">22050 Hz</option>
-          </select>
-        </div>
-        <div id="b-cres-wrap" style="display:none" class="field">
-          <label>Custom Resolution</label>
-          <input type="text" id="b-cres" class="mono" placeholder="480x272">
-        </div>
-      </div>
-
-    </div>
-  </div>
+    </header>
 
 
+    <!-- ═══════════ STUDIO TAB ═══════════ -->
+    <div class="container">
 
-  <div class="section">
-    <div class="sh"><div class="snum b">⬇</div><div class="stitle">Generated .bat File</div></div>
-    <div class="sbody">
-      <div class="cmd-block">
-        <div class="cmd-hdr">
-          <div class="cmd-hdr-l"><span class="dot"></span> VP6_SIMS4_WW.bat</div>
-          <button class="btn-cp" id="bat-copy-btn" onclick="copyBat()">Copy</button>
+        <!-- STEP 0: SETUP -->
+        <div class="section" style="grid-column:1/-1;margin-bottom:4px">
+            <div class="sh">
+                <div class="snum" style="background:var(--sub)">0</div>
+                <div class="stitle">Before You Start — Setup</div>
+            </div>
+            <div class="sbody" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+                <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Required Tools</div>
+                    <div style="font-size:11px;margin-bottom:10px"><a href="https://github.com/LudGar/Sims-4-WW-Video-Toolkit" target="_blank" style="color:var(--accent);font-weight:700">⬇ Download the full toolkit folder from GitHub</a> — contains all tools pre-arranged in the correct folder structure. Or download individual tools below:<br><span style="color:var(--sub);font-style:italic">⚠ Right-click each link → <strong style="color:var(--text)">Save link as...</strong></span></div>
+                    <div style="font-size:11px;color:var(--muted);line-height:2.1">
+                        <code style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--accent2);font-family:var(--mono)">tools\FFMPEG\ffmpeg.exe</code>
+                        <a href="https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-win64-gpl.zip" target="_blank">⬇ download (zip — extract ffmpeg.exe)</a><br>
+                        <code style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--accent2);font-family:var(--mono)">tools\sx\sx.exe</code>
+                        <a href="https://github.com/bluesky-dev12/MAD-x-VP6-x-MPC-x-MPV-x-WMV-Compiler/releases/latest" target="_blank">⬇ EA VP6 toolkit (contains sx.exe)</a><br>
+                        <code style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--accent2);font-family:var(--mono)">tools\VP6\nihav-encoder.exe</code>
+                        <a href="https://github.com/bluesky-dev12/MAD-x-VP6-x-MPC-x-MPV-x-WMV-Compiler/releases/latest" target="_blank">⬇ same EA VP6 toolkit</a><br>
+                        <code style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--accent2);font-family:var(--mono)">tools\quickbms\quickbms.exe</code>
+                        <a href="https://aluigi.altervista.org/papers/quickbms.zip" target="_blank">⬇ quickbms (zip)</a><br>
+                        <code style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--accent2);font-family:var(--mono)">tools\quickbms\eavp6_muxer.bms</code>
+                        <a href="https://aluigi.altervista.org/bms/eavp6_muxer.bms" target="_blank">⬇ right-click → Save link as...</a><br>
+                        <code style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--accent2);font-family:var(--mono)">tools\texconv\texconv.exe</code>
+                        <a href="https://github.com/microsoft/DirectXTex/releases/latest/download/texconv.exe" target="_blank">⬇ right-click → Save link as...</a>
+                        <span style="color:var(--sub)">(optional)</span>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Folder Structure</div>
+                    <div style="font-size:11px;color:var(--muted);line-height:1.7;font-family:var(--mono)">
+                        📁 COMPILER\<br>
+                        &nbsp;&nbsp;📁 TOOLS\ 			<span style="font-family:var(--sans);color:var(--sub)">(all tools above)</span><br>
+                        &nbsp;&nbsp;📁 MP4\ 			<span style="font-family:var(--sans);color:var(--sub)">(drop your .mp4 here)</span><br>
+                        &nbsp;&nbsp;📁 ICO\ 			<span style="font-family:var(--sans);color:var(--sub)">(drop .png here for DDS)</span><br>
+                        &nbsp;&nbsp;📁 OUT\ 			<span style="font-family:var(--sans);color:var(--sub)">(outputs — auto-created)</span><br>
+                        &nbsp;&nbsp;📄 VP6_SIMS4_WW.bat <span style="font-family:var(--sans);color:var(--sub)">(download after Step 5)</span>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Also Needed</div>
+                    <div style="font-size:11px;color:var(--muted);line-height:1.7">
+                        <strong style="color:var(--text)">S4PE</strong> — to import the encoded <code style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--accent2);font-family:var(--mono)">.avi</code> file and get its Instance ID. No .package needed upfront — S4PE can create one from scratch during import.<br><br>
+                        <strong style="color:var(--text)">WickedWhims</strong> installed in your Sims 4 Mods folder for in-game testing.
+                    </div>
+                </div>
+            </div>
         </div>
-        <pre class="cmd" id="bat-preview" style="max-height:560px"></pre>
-      </div>
-      <button class="btn-sm p" style="width:100%;padding:10px;font-size:13px;font-weight:800;margin-top:8px" onclick="downloadBat()">⬇ Download VP6_SIMS4_WW.bat</button>
-    </div>
-  </div>
-</div><!-- /three-col -->
 
-<!-- ═══════════ WORKFLOW TAB ═══════════ -->
-<div class="tab-panel" id="panel-workflow">
-<div class="container">
-  <div class="section">
-    <div class="sh"><div class="snum b">📋</div><div class="stitle">Full Workflow — End to End</div></div>
-    <div class="sbody">
-      <div class="steps">
-        <div class="step"><div class="step-n">1</div><div><div class="step-t">Configure Studio tab</div><div class="step-d">Fill in all fields: video filename, title, author, orientations, duration, encoding settings. Everything bakes into the .bat on the fly.</div></div></div>
-        <div class="step"><div class="step-n">2</div><div><div class="step-t">Drop files into folders</div><div class="step-d"><code>MP4\YourVideo.mp4</code> — the source file. <code>Thumbnail\YourThumb.png</code> — optional, for DDS conversion. Both folders are auto-created on first run.</div></div></div>
-        <div class="step"><div class="step-n">3</div><div><div class="step-t">Download &amp; run VP6_SIMS4_WW.bat</div><div class="step-d">One click runs everything: Y4M encode → WAV → EA audio → VP6 → mux → rename .avi. Thumbnail PNG → DDS. XML files written. All outputs go to <code>Release\</code>.</div></div></div>
-        <div class="step"><div class="step-n">4</div><div><div class="step-t">Import .avi into S4PE</div><div class="step-d">Open your <code>.package</code> in S4PE. Import <code>Release\VideoName.avi</code> — type <code>376840D7</code>, group <code>00000000</code>. Copy the hex Instance ID.</div></div></div>
-        <div class="step"><div class="step-n">5</div><div><div class="step-t">Paste Instance ID → re-download bat</div><div class="step-d">Paste the ID into Step 2 of the Studio tab. Re-download the .bat — now the XML files it writes will reference the correct video resource.</div></div></div>
-        <div class="step"><div class="step-n">6</div><div><div class="step-t">Re-run the bat (skip encode)</div><div class="step-d">The bat detects <code>Release\VideoName.avi</code> already exists and skips the encode. It just writes the XML files and converts the thumbnail.</div></div></div>
-        <div class="step"><div class="step-n">7</div><div><div class="step-t">Import XMLs &amp; DDS into S4PE</div><div class="step-d">Import the 3 XML files from <code>Release\</code> with their correct type IDs. Import the <code>.DDS</code> as type <code>00B2D882</code>, group <code>00000000</code>, instance = same as the video.</div></div></div>
-        <div class="step"><div class="step-n">8</div><div><div class="step-t">Save .package &amp; test in-game</div><div class="step-d">Drop the <code>.package</code> into <code>Mods\</code>. Launch Sims 4 — your video should appear in the WickedWhims porn TV channel.</div></div></div>
-      </div>
-      <div class="blue-box" style="margin-top:8px"><strong>Tip:</strong> Re-running the bat after adding the Instance ID is fast — encode is skipped, only XML and DDS steps run (~seconds).</div>
-    </div>
-  </div>
-</div>
-</div>
-  
-<script type="module" src="./app.js"></script>
+        <div class="three-col">
+
+            <!-- STEP 1: THUMBNAIL -->
+            <div class="section">
+                <div class="sh">
+                    <div class="snum">1</div>
+                    <div class="stitle">Thumbnail Generator</div>
+                </div>
+                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Create the icon shown in the WW video selector. Download as PNG, drop in <code>Thumbnail\</code> — the bat converts it to DDS automatically.</div>
+                <div class="sbody">
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Style</label>
+                            <select id="th-style">
+                                <option value="dark">Dark Gold</option>
+                                <option value="red">Dark Red</option>
+                                <option value="purple">Dark Purple</option>
+                                <option value="teal">Dark Teal</option>
+                                <option value="minimal">Minimal Black</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Size</label>
+                            <select id="th-size">
+                                <option value="128" selected>128×128 — in-game</option>
+                                <option value="256">256×256 — 2× preview</option>
+                                <option value="512">512×512 — full quality</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field"><label>Overlay Opacity <span class="hint" id="th-opacity-val">60%</span></label><input type="range" id="th-opacity" min="0" max="100" value="60"></div>
+                        <div class="field"><label>Background Image</label><input type="file" id="th-bg" accept="image/*" style="font-size:11px;padding:5px 9px"></div>
+                    </div>
+                    <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+                        <canvas id="thumb-canvas" width="128" height="128"></canvas>
+                        <div class="thumb-side">
+                            <div class="blue-box" style="font-size:11px">Title &amp; author are pulled from Step 3 automatically. Drop PNG into <code>Thumbnail\</code> for DDS conversion.</div>
+                            <button class="btn-sm p" onclick="downloadThumb()" style="width:100%">⬇ Download PNG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: VIDEO DETAILS -->
+            <div class="section">
+                <div class="sh">
+                    <div class="snum">3</div>
+                    <div class="stitle">.package Details</div>
+                </div>
+                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Fill in the video filename (paste your .mp4 name without extension), display title, author and description. The bat and XML are generated from this info.</div>
+                <div class="sbody">
+                    <div class="field">
+                        <label>Video Filename <span class="req">*</span><span class="hint">paste your .mp4 name (no extension) — auto-fills title</span></label>
+                        <input type="text" id="vid-filename" class="mono" placeholder="IrisCowgirl2Blender3D4K144fps" autocomplete="off" spellcheck="false">
+                    </div>
+                    <div class="field-row">
+                        <div class="field"><label>Display Title <span class="req">*</span><span class="hint">auto-filled · editable</span></label><input type="text" id="vid-title" placeholder="Name of Your Video"></div>
+                        <div class="field"><label>Author <span class="req">*</span></label><input type="text" id="vid-author" placeholder="YourName"></div>
+                    </div>
+                    <div class="field"><label>Description<span class="hint">shown in WW channel selector</span></label><textarea id="vid-desc" placeholder="Description…"></textarea></div>
+                </div>
+            </div>
+
+            <!-- STEP 4: ORIENTATION & DURATION -->
+            <div class="section">
+                <div class="sh">
+                    <div class="snum">4</div>
+                    <div class="stitle">Orientation &amp; Duration</div>
+                </div>
+                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Add tags that describe the video content (e.g. POV, COWGIRL) and set the exact duration in minutes and seconds.</div>
+                <div class="sbody">
+                    <div class="field">
+                        <label>Tags <span class="hint">Enter or comma to add</span></label>
+                        <div class="tag-wrap" id="tag-wrap"><input type="text" id="tag-field" class="tag-field" placeholder="e.g. THREESOME, SOLO…"></div>
+                    </div>
+                    <div class="field">
+                        <label>Active values <span class="hint">written to XML</span></label>
+                        <div class="orient-summary" id="orient-summary"><span class="os-empty">No tags selected</span></div>
+                    </div>
+                    <div class="field">
+                        <label>Duration <span class="req">*</span><span class="hint">auto-converts to seconds</span></label>
+                        <div class="dur-presets" style="margin-bottom:6px">
+                            <button type="button" class="dur-pre" onclick="setDur(0,30)">0:30</button>
+                            <button type="button" class="dur-pre" onclick="setDur(1,0)">1:00</button>
+                            <button type="button" class="dur-pre" onclick="setDur(2,0)">2:00</button>
+                            <button type="button" class="dur-pre" onclick="setDur(3,0)">3:00</button>
+                            <button type="button" class="dur-pre" onclick="setDur(5,0)">5:00</button>
+                            <button type="button" class="dur-pre" onclick="setDur(10,0)">10:00</button>
+                        </div>
+                        <div class="dur-grid">
+                            <div class="field"><label>Minutes</label><input type="number" id="dur-min" min="0" max="999" value="0"></div>
+                            <div class="dur-sep">:</div>
+                            <div class="field"><label>Seconds</label><input type="number" id="dur-sec" min="0" max="59" value="0"></div>
+                        </div>
+                        <div class="dur-total" id="dur-total">0 seconds total</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 5: ENCODE SETTINGS -->
+            <div class="section">
+                <div class="sh">
+                    <div class="snum">5</div>
+                    <div class="stitle">Encode Video</div>
+                </div>
+                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Configure encoding settings, then download the bat. Run it from your COMPILER folder — it encodes the video, writes the XML files, and converts the thumbnail.</div>
+                <div class="sbody">
+                    <div class="blue-box" style="font-size:11px">Configure encoding, then download the <code>.bat</code>. It encodes VP6, converts the thumbnail PNG to DDS, and writes the XML files — all in one run. Also needs <a href="https://github.com/microsoft/DirectXTex/releases" target="_blank">texconv</a> in <code>tools\texconv\</code> for DDS.</div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Resolution</label>
+                            <select id="b-res">
+                                <option value="480x272" selected>480×272 SD</option>
+                                <option value="512x288">512×288 SD+</option>
+                                <option value="640x272">640×272 wide</option>
+                                <option value="1024x576">1024×576 HD</option>
+                                <option value="320x176">320×176 small</option>
+                                <option value="custom">Custom…</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Frame Rate</label>
+                            <select id="b-fps">
+                                <option value="15" selected>15 fps ✓</option>
+                                <option value="24">24 fps</option>
+                                <option value="30">30 fps</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Rate Control</label>
+                            <select id="b-ratemode">
+                                <option value="quant">CQP — Constant Quality</option>
+                                <option value="cbr">CBR — Constant Bitrate</option>
+                            </select>
+                        </div>
+                        <div class="field" id="quant-wrap">
+                            <label>Quality <span class="hint" id="quant-hint">1=best, 63=worst</span></label>
+                            <input type="range" id="b-quant" min="1" max="63" value="18">
+                        </div>
+                        <div class="field" id="cbr-wrap" style="display:none">
+                            <label>Bitrate (kbps)</label>
+                            <select id="b-cbr">
+                                <option value="1000">1000 kbps</option>
+                                <option value="1500">1500 kbps</option>
+                                <option value="2000">2000 kbps</option>
+                                <option value="3000">3000 kbps</option>
+                                <option value="4000" selected>4000 kbps</option>
+                                <option value="6000">6000 kbps</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Audio Sample Rate</label>
+                            <select id="b-asr">
+                                <option value="44100" selected>44100 Hz</option>
+                                <option value="22050">22050 Hz</option>
+                            </select>
+                        </div>
+                        <div id="b-cres-wrap" style="display:none" class="field">
+                            <label>Custom Resolution</label>
+                            <input type="text" id="b-cres" class="mono" placeholder="480x272">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="sh">
+                    <div class="snum b">⬇</div>
+                    <div class="stitle">Generated .bat File</div>
+                </div>
+                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Live preview of the generated bat. Re-downloads automatically reflect any changes you make above.</div>
+                <div class="sbody">
+                    <div class="cmd-block">
+                        <div class="cmd-hdr">
+                            <div class="cmd-hdr-l"><span class="dot"></span> VP6_SIMS4_WW.bat</div>
+                            <button class="btn-cp" id="bat-copy-btn" onclick="copyBat()">Copy</button>
+                        </div>
+                        <pre class="cmd" id="bat-preview" style="max-height:560px"></pre>
+                    </div>
+                    <button class="btn-sm p" style="width:100%;padding:10px;font-size:13px;font-weight:800;margin-top:8px" onclick="downloadBat()">⬇ Download VP6_SIMS4_WW.bat</button>
+                </div>
+            </div>
+        </div><!-- /three-col -->
+
+        <!-- FILE NAMES PANEL -->
+        <div class="section" style="margin-top:14px">
+            <div class="sh">
+                <div class="snum b">📄</div>
+                <div class="stitle">Output Filenames — Import into S4PE in this order</div>
+            </div>
+            <div class="sbody" style="gap:6px">
+                <div class="fn-prev" style="border-color:var(--blue)"><span style="color:var(--blue)">🎬</span> <span class="fns" style="color:var(--blue)">S4_376840D7_00000000_</span><span class="fnd" id="fn-avi" style="color:var(--blue)">????????????????</span><span class="fns" style="color:var(--blue)">____AVI.avi</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 376840D7 · video resource</span></div>
+                <div class="fn-prev" style="border-color:#30c8b0"><span style="color:#30c8b0">🖼</span> <span class="fns" style="color:#30c8b0">S4_00B2D882_00000000_</span><span class="fnd" id="fn-img" style="color:#30c8b0">????????????????</span><span class="fns" style="color:#30c8b0">____IMG.dds</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 00B2D882 · icon image</span></div>
+                <div class="fn-prev">🟠 <span class="fns">S4_5B02819E_00000000_</span><span class="fnd" id="fn-ww">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 5B02819E · WW Channel</span></div>
+                <div class="fn-prev">🟢 <span class="fns">S4_E882D22F_00000000_</span><span class="fnd" id="fn-ia">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type E882D22F · Interaction</span></div>
+                <div class="fn-prev">🔴 <span class="fns">S4_7DF2169C_00000000_</span><span class="fnd" id="fn-ex">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 7DF2169C · Exit Condition</span></div>
+            </div>
+        </div>
+
+        <script type="module" src="./app.js"></script>
 </body>
+  
 </html>
