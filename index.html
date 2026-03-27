@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WickedWhims Video Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c0f;--bg2:#13131a;--bg3:#1a1a24;
+  --border:#2a2a3a;--border-b:#3d3d55;
+  --accent:#e8a030;--accent2:#f0c060;
+  --adim:rgba(232,160,48,.12);--aglow:rgba(232,160,48,.25);
+  --text:#e8e4dc;--dim:#8a8598;--muted:#4a4760;
+  --green:#50c878;--blue:#5090e0;--bdim:rgba(80,144,224,.12);
+  --red:#e05050;
+  --mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif;
+}
+html{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px}
+body{min-height:100vh;background:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(232,160,48,.07) 0%,transparent 60%),var(--bg)}
+
+/* HEADER */
+header{border-bottom:1px solid var(--border);padding:18px 36px 16px;display:flex;align-items:center;gap:16px;background:rgba(13,13,18,.97);position:sticky;top:0;z-index:100}
+.logo{width:38px;height:38px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;box-shadow:0 0 16px var(--aglow)}
+header h1{font-size:17px;font-weight:800;letter-spacing:-.02em}
+header h1 span{color:var(--accent)}
+header p{font-size:11px;color:var(--dim);font-family:var(--mono);margin-top:2px}
+
+/* TABS */
+.tab-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 28px;display:flex}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--dim);font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.04em;padding:12px 16px 10px;cursor:pointer;transition:color .15s,border-color .15s;white-space:nowrap}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* LAYOUT */
+.container{max-width:100%;margin:0;padding:24px 20px 90px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;grid-auto-flow:column;gap:16px;align-items:start}
+@media(max-width:900px){.three-col{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:580px){.three-col{grid-template-columns:1fr}}
+
+/* SECTIONS */
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.section:hover{border-color:var(--border-b)}
+.sh{padding:10px 16px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.snum{width:21px;height:21px;border-radius:50%;background:var(--adim);border:1px solid var(--accent);color:var(--accent);font-family:var(--mono);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.snum.b{background:var(--bdim);border-color:var(--blue);color:var(--blue)}
+.stitle{font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.sbody{padding:16px;display:grid;gap:12px}
+
+/* ACCORDION */
+.acc-hdr{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:border-color .15s}
+.acc-hdr:hover{border-bottom-color:var(--border)}
+.acc-hdr.open{border-bottom-color:var(--border)}
+.acc-title{font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.acc-arr{color:var(--muted);font-size:12px;transition:transform .2s}
+.acc-arr.open{transform:rotate(180deg)}
+.acc-body{display:none;padding:16px;display:none}
+.acc-body.open{display:grid;gap:12px}
+
+/* FORM */
+.field{display:flex;flex-direction:column;gap:5px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:580px){.field-row,.field-row-3{grid-template-columns:1fr}}
+label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:6px}
+.req{color:var(--accent)}
+.hint{font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);margin-left:auto}
+input[type=text],input[type=number],textarea,select{background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:14px;padding:9px 12px;outline:none;width:100%;transition:border-color .15s,box-shadow .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--adim)}
+input[type=range]{padding:4px 0}
+.mono{font-family:var(--mono)!important;font-size:12.5px!important}
+textarea{resize:vertical;min-height:64px}
+select option{background:var(--bg2)}
+
+/* HASH */
+.hash-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hbox{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;display:flex;flex-direction:column;gap:3px}
+.hl{font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:.05em}
+.hv{font-family:var(--mono);font-size:12px;color:var(--accent2);word-break:break-all;min-height:17px}
+.hv.e{color:var(--muted);font-style:italic;font-size:11px}
+.fn-prev{background:var(--bg);border:1px dashed var(--border-b);border-radius:8px;padding:9px 12px;font-family:var(--mono);font-size:12px;display:flex;align-items:center;gap:6px}
+.fns{color:var(--muted)}.fnd{color:var(--accent)}
+
+/* ORIENTATIONS */
+.orient-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+@media(max-width:460px){.orient-grid{grid-template-columns:1fr}}
+.orient-opt{display:flex;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;user-select:none;transition:border-color .15s,background .15s}
+.orient-opt:hover{border-color:var(--border-b)}
+.orient-opt.on{border-color:var(--accent);background:var(--adim)}
+.ochk{width:15px;height:15px;border:2px solid var(--border-b);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s,background .15s}
+.orient-opt.on .ochk{border-color:var(--accent);background:var(--accent)}
+.ochk svg{display:none}.orient-opt.on .ochk svg{display:block}
+.olbl{font-size:12px;font-family:var(--mono)}
+
+/* TAG CHIPS */
+.tag-wrap{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 9px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;cursor:text;min-height:38px;transition:border-color .15s,box-shadow .15s}
+.tag-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--adim)}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--adim);border:1px solid var(--accent);border-radius:20px;padding:2px 10px 2px 11px;font-family:var(--mono);font-size:11px;color:var(--accent2)}
+.chip-del{background:none;border:none;cursor:pointer;color:var(--accent);font-size:14px;line-height:1;padding:0;opacity:.7;display:flex;align-items:center}
+.chip-del:hover{opacity:1}
+.tag-field{background:none;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:12px;min-width:100px;flex:1;padding:2px 3px}
+.tag-field::placeholder{color:var(--muted)}
+.orient-summary{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:var(--mono);font-size:12px;color:var(--accent2);min-height:34px;display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+.os-chip{background:var(--adim);border:1px solid var(--accent);border-radius:20px;padding:2px 9px;font-size:11px;color:var(--accent2)}
+.os-empty{color:var(--muted);font-style:italic;font-size:11px}
+
+/* DURATION */
+.dur-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:9px;align-items:center}
+.dur-sep{text-align:center;color:var(--muted);font-size:18px}
+.dur-total{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-family:var(--mono);font-size:13px;color:var(--accent2);text-align:center}
+.dur-presets{display:flex;gap:5px;flex-wrap:wrap}
+.dur-pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-family:var(--mono);font-size:11px;color:var(--dim);cursor:pointer;transition:border-color .15s,color .15s}
+.dur-pre:hover{border-color:var(--accent);color:var(--accent)}
+
+/* BOXES */
+.info-box{background:rgba(80,200,120,.06);border:1px solid rgba(80,200,120,.25);border-radius:8px;padding:10px 12px;font-size:12px;color:#80d8a0;line-height:1.6}
+.info-box strong{color:var(--green)}
+.blue-box{background:rgba(80,144,224,.07);border:1px solid rgba(80,144,224,.25);border-radius:8px;padding:10px 12px;font-size:12px;color:#80aae8;line-height:1.6}
+.blue-box strong{color:#a0c4f8}
+.blue-box code,.info-box code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:var(--mono);font-size:11px;color:var(--accent2)}
+
+/* CMD BLOCK */
+.cmd-block{background:#08080f;border:1px solid var(--border-b);border-radius:10px;overflow:hidden}
+.cmd-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.cmd-hdr-l{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 5px rgba(80,200,120,.5)}
+.btn-cp{background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--dim);font-family:var(--sans);font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.btn-cp:hover{border-color:var(--accent);color:var(--accent)}
+pre.cmd{padding:14px 16px;font-family:var(--mono);font-size:11.5px;line-height:1.75;color:#a8c898;overflow-x:auto;white-space:pre-wrap;word-break:break-all;max-height:260px;overflow-y:auto}
+
+/* RESULT */
+#result{display:none;margin-top:14px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+#result.vis{display:block}
+.res-hdr{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--bg3)}
+.res-fn{font-family:var(--mono);font-size:11px;color:var(--accent)}
+.res-acts{display:flex;gap:7px}
+.btn-sm{background:var(--bg);border:1px solid var(--border);color:var(--dim);border-radius:6px;padding:5px 12px;font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;transition:border-color .15s,color .15s}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm.p{background:var(--adim);border-color:var(--accent);color:var(--accent)}
+.btn-sm.p:hover{background:var(--accent);color:#0c0c0f}
+pre#xml-out{padding:16px;font-family:var(--mono);font-size:12px;line-height:1.7;color:#b8b0cc;overflow-x:auto;white-space:pre;max-height:420px;overflow-y:auto}
+
+/* ERROR */
+.err{background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:#f08080;margin-top:8px;display:none}
+.err.vis{display:block}
+
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.step-n{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:1px solid var(--blue);background:var(--bdim);color:var(--blue);font-size:11px;font-weight:700;font-family:var(--mono);display:flex;align-items:center;justify-content:center;margin-top:1px}
+.step-t{font-size:13px;font-weight:700;margin-bottom:3px}
+.step-d{font-size:12px;color:var(--dim);line-height:1.5}
+.step-d a{color:var(--blue);text-decoration:none}
+.step-d a:hover{text-decoration:underline}
+.step-d code{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:var(--mono);font-size:11px;color:var(--accent2)}
+
+/* THUMBNAIL */
+#thumb-canvas{border-radius:10px;border:1px solid var(--border);max-width:280px;width:100%}
+.thumb-side{flex:1;display:flex;flex-direction:column;gap:9px;min-width:150px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo">🎬</div>
+  <div>
+    <h1>WickedWhims <span>Video</span> Toolkit</h1>
+    <p>Sims 4 · Custom Video Mod Studio · WickedWhims</p>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('studio',this)">🎛 Studio</button>
+  <button class="tab-btn" onclick="switchTab('workflow',this)">📋 Full Workflow</button>
+</div>
+
+
+<!-- ═══════════ STUDIO TAB ═══════════ -->
+<div class="tab-panel active" id="panel-studio">
+<div class="container">
+
+<div class="three-col">
+
+  <!-- STEP 1: THUMBNAIL -->
+  <div class="section">
+    <div class="sh"><div class="snum b">1</div><div class="stitle">Thumbnail Generator</div></div>
+    <div class="sbody">
+      <div class="field-row">
+        <div class="field">
+          <label>Style</label>
+          <select id="th-style">
+            <option value="dark">Dark Gold</option>
+            <option value="red">Dark Red</option>
+            <option value="purple">Dark Purple</option>
+            <option value="teal">Dark Teal</option>
+            <option value="minimal">Minimal Black</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Size</label>
+          <select id="th-size">
+            <option value="128" selected>128×128 — in-game icon</option>
+            <option value="256">256×256 — 2× preview</option>
+            <option value="512">512×512 — full quality</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Overlay Opacity <span class="hint" id="th-opacity-val">60%</span></label><input type="range" id="th-opacity" min="0" max="100" value="60"></div>
+        <div class="field"><label>Background Image</label><input type="file" id="th-bg" accept="image/*" style="font-size:11px;padding:5px 9px"></div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+        <canvas id="thumb-canvas" width="512" height="512" style="border-radius:9px;border:1px solid var(--border);max-width:220px;width:100%;flex-shrink:0"></canvas>
+        <div class="thumb-side">
+          <div class="blue-box" style="font-size:11px">Title, author &amp; tags are pulled from sections 3 &amp; 4 automatically.</div>
+          <button class="btn-sm p" onclick="downloadThumb()" style="width:100%">⬇ Download PNG</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: S4PE INSTANCE ID -->
+  <div class="section">
+    <div class="sh"><div class="snum">2</div><div class="stitle">Import into S4PE — Get Instance ID</div></div>
+    <div class="sbody">
+      <div class="info-box">After the <code>.bat</code> runs, import the <code>.avi</code> from <code>Release\</code> into S4PE as type <strong>376840D7</strong>, group <strong>00000000</strong>. Paste the Instance ID S4PE assigns below.</div>
+      <div class="field">
+        <label>VP6 AVI Instance ID (Hex) <span class="req">*</span></label>
+        <input type="text" id="vid-asset" class="mono" placeholder="0000000000000000" maxlength="16" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="hbox"><div class="hl">Full Resource Key</div><div class="hv" id="asset-preview" style="color:var(--muted);font-style:italic;font-size:11px">376840d7:00000000:????????????????</div></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: VIDEO DETAILS -->
+  <div class="section">
+    <div class="sh"><div class="snum">3</div><div class="stitle">Video Details</div></div>
+    <div class="sbody">
+      <div class="field">
+        <label>Video Filename <span class="req">*</span><span class="hint">paste your .mp4 name (without extension) — auto-fills title</span></label>
+        <input type="text" id="vid-filename" class="mono" placeholder="IrisCowgirl2Blender3D4K144fps" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Display Title <span class="req">*</span><span class="hint">auto-filled · editable</span></label><input type="text" id="vid-title" placeholder="Name of Your Video"></div>
+        <div class="field"><label>Author <span class="req">*</span></label><input type="text" id="vid-author" placeholder="YourName"></div>
+      </div>
+      <div class="field"><label>Description <span class="hint">shown in WW channel selector</span></label><textarea id="vid-desc" placeholder="Description…"></textarea></div>
+      <div class="field">
+        <label>Display Icon Resource Key <span class="hint">default = built-in WW icon</span></label>
+        <input type="text" id="vid-icon" class="mono" value="2F7D0004:00000000:D19DE7E9C0FA296B">
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: ORIENTATION & DURATION -->
+  <div class="section">
+    <div class="sh"><div class="snum">4</div><div class="stitle">Orientation &amp; Duration</div></div>
+    <div class="sbody">
+      <div class="field">
+        <label>Sexual Orientation <span class="req">*</span></label>
+        <div class="orient-grid">
+          <div class="orient-opt on" data-val="BISEXUAL"><div class="ochk"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#0c0c0f" stroke-width="2" stroke-linecap="round"/></svg></div><span class="olbl">BISEXUAL</span></div>
+          <div class="orient-opt" data-val="HETEROSEXUAL"><div class="ochk"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#0c0c0f" stroke-width="2" stroke-linecap="round"/></svg></div><span class="olbl">HETEROSEXUAL</span></div>
+          <div class="orient-opt" data-val="HOMOSEXUAL_MALE"><div class="ochk"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#0c0c0f" stroke-width="2" stroke-linecap="round"/></svg></div><span class="olbl">HOMOSEXUAL_MALE</span></div>
+          <div class="orient-opt" data-val="HOMOSEXUAL_FEMALE"><div class="ochk"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#0c0c0f" stroke-width="2" stroke-linecap="round"/></svg></div><span class="olbl">HOMOSEXUAL_FEMALE</span></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Custom Tags <span class="hint">Enter or comma to add</span></label>
+        <div class="tag-wrap" id="tag-wrap"><input type="text" id="tag-field" class="tag-field" placeholder="e.g. THREESOME, SOLO…"></div>
+      </div>
+      <div class="field">
+        <label>Active values <span class="hint">written to XML</span></label>
+        <div class="orient-summary" id="orient-summary"><span class="os-chip">BISEXUAL</span></div>
+      </div>
+      <div class="field">
+        <label>Duration <span class="req">*</span><span class="hint">auto-converts to seconds</span></label>
+        <div class="dur-presets" style="margin-bottom:6px">
+          <button type="button" class="dur-pre" onclick="setDur(0,30)">0:30</button>
+          <button type="button" class="dur-pre" onclick="setDur(1,0)">1:00</button>
+          <button type="button" class="dur-pre" onclick="setDur(2,0)">2:00</button>
+          <button type="button" class="dur-pre" onclick="setDur(3,0)">3:00</button>
+          <button type="button" class="dur-pre" onclick="setDur(5,0)">5:00</button>
+          <button type="button" class="dur-pre" onclick="setDur(10,0)">10:00</button>
+          <button type="button" class="dur-pre" onclick="setDur(15,0)">15:00</button>
+          <button type="button" class="dur-pre" onclick="setDur(30,0)">30:00</button>
+        </div>
+        <div class="dur-grid">
+          <div class="field"><label>Minutes</label><input type="number" id="dur-min" min="0" max="999" value="0"></div>
+          <div class="dur-sep">:</div>
+          <div class="field"><label>Seconds</label><input type="number" id="dur-sec" min="0" max="59" value="0"></div>
+        </div>
+        <div class="dur-total" id="dur-total">0 seconds total</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: ENCODE VIDEO — BAT -->
+  <div class="section">
+    <div class="sh"><div class="snum">5</div><div class="stitle">Encode Video &amp; Download Bat</div></div>
+    <div class="sbody">
+      <div class="blue-box" style="font-size:11px">Start here. Configure your encoding settings, download the <code>.bat</code> file, and run it to produce the VP6 <code>.avi</code> file. Also converts any <code>.png</code> in <code>Thumbnail\</code> to <code>.DDS</code> using <a href="https://github.com/microsoft/DirectXTex/releases" target="_blank">texconv</a> (place in <code>tools\texconv\</code>).</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Resolution</label>
+          <select id="b-res">
+            <option value="480x272" selected>480×272 SD</option>
+            <option value="512x288">512×288 SD+</option>
+            <option value="640x272">640×272 wide</option>
+            <option value="1024x576">1024×576 HD</option>
+            <option value="320x176">320×176 small</option>
+            <option value="custom">Custom…</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Frame Rate</label>
+          <select id="b-fps">
+            <option value="15" selected>15 fps ✓</option>
+            <option value="24">24 fps</option>
+            <option value="30">30 fps</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Rate Control Mode</label>
+          <select id="b-ratemode">
+            <option value="quant">CQP — Constant Quality (quant)</option>
+            <option value="cbr">CBR — Constant Bitrate (kbps)</option>
+          </select>
+        </div>
+        <div class="field" id="quant-wrap">
+          <label>Quality <span class="hint" id="quant-hint">1=best, 63=worst</span></label>
+          <input type="range" id="b-quant" min="1" max="63" value="18">
+        </div>
+        <div class="field" id="cbr-wrap" style="display:none">
+          <label>Bitrate (kbps) <span class="hint">e.g. 2000 for 512x288</span></label>
+          <select id="b-cbr">
+            <option value="1000">1000 kbps</option>
+            <option value="1500">1500 kbps</option>
+            <option value="2000" selected>2000 kbps</option>
+            <option value="3000">3000 kbps</option>
+            <option value="4000">4000 kbps</option>
+            <option value="6000">6000 kbps</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Audio Sample Rate</label>
+          <select id="b-asr">
+            <option value="44100" selected>44100 Hz</option>
+            <option value="22050">22050 Hz</option>
+          </select>
+        </div>
+      </div>
+      <div id="b-cres-wrap" style="display:none">
+        <div class="field"><label>Custom Resolution (WxH — multiples of 32×16)</label><input type="text" id="b-cres" class="mono" placeholder="480x272"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /three-col -->
+
+<!-- BAT PREVIEW PANEL -->
+<div class="section" style="margin:0 20px 24px">
+  <div class="sh"><div class="snum b">⬇</div><div class="stitle">Generated .bat File — Preview &amp; Download</div></div>
+  <div class="sbody">
+    <div class="cmd-block">
+      <div class="cmd-hdr">
+        <div class="cmd-hdr-l"><span class="dot"></span> VP6_SIMS4_WW.bat</div>
+        <button class="btn-cp" id="bat-copy-btn" onclick="copyBat()">Copy</button>
+      </div>
+      <pre class="cmd" id="bat-preview" style="max-height:320px"></pre>
+    </div>
+    <button class="btn-sm p" style="width:100%;padding:10px;margin-top:8px;font-size:13px;font-weight:800" onclick="downloadBat()">⬇ Download VP6_SIMS4_WW.bat</button>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- ═══════════ WORKFLOW TAB ═══════════ -->
+<div class="tab-panel" id="panel-workflow">
+<div class="container">
+
+  <div class="section">
+    <div class="sh"><div class="snum b">📋</div><div class="stitle">Full Workflow — End to End</div></div>
+    <div class="sbody">
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div><div class="step-t">Download the EA VP6 Encoder Toolkit</div><div class="step-d">Get it from <a href="https://github.com/bluesky-dev12/MAD-x-VP6-x-MPC-x-MPV-x-WMV-Compiler/releases/tag/4.0" target="_blank">github.com/bluesky-dev12 — Release 4.0</a>. Extract so your folder contains <code>tools\</code>, <code>MP4\</code> and the <code>.bat</code> at the same level.</div></div></div>
+        <div class="step"><div class="step-n">2</div><div><div class="step-t">Drop MP4 files into MP4\</div><div class="step-d"><strong>No spaces in filenames!</strong> Rename <code>My Video.mp4</code> → <code>MyVideo.mp4</code>. Multiple files are processed in one run.</div></div></div>
+        <div class="step"><div class="step-n">3</div><div><div class="step-t">Configure &amp; Download the .bat (Studio → section 5–6)</div><div class="step-d">Set resolution, fps and bitrate in the Studio tab. The <code>.bat</code> preview updates live. Download it and place it in the encoder root folder.</div></div></div>
+        <div class="step"><div class="step-n">4</div><div><div class="step-t">Run VP6_SIMS4_WW.bat</div><div class="step-d">Double-click. Runs 5 steps: FFmpeg downscale → WAV → EA audio stream → <code>nihav-encoder</code> VP6 encode → QuickBMS mux. Output <code>.avi</code> files appear in <code>Release\</code>. Output <code>.avi</code> files appear in <code>Release\</code>.</div></div></div>
+        <div class="step"><div class="step-n">5</div><div><div class="step-t">Import .avi into S4PE</div><div class="step-d">Open your <code>.package</code> in <a href="https://github.com/s4ptacle/Sims4Tools" target="_blank">S4PE</a>. Import each <code>.avi</code> from <code>Release\</code> — type <code>376840D7</code>, group <code>00000000</code>. Copy the hex Instance ID S4PE assigns.</div></div></div>
+        <div class="step"><div class="step-n">6</div><div><div class="step-t">Fill in Studio tab &amp; Generate XML</div><div class="step-d">Paste the Instance ID into <strong>section 4</strong>, fill package name, title, author, orientation and duration in sections 1–3, then click <strong>Generate XML</strong>.</div></div></div>
+        <div class="step"><div class="step-n">7</div><div><div class="step-t">Import the XML into your .package</div><div class="step-d">In S4PE import the downloaded <code>.xml</code> — type <code>5B02819E</code>, group <code>00000000</code>, instance = FNV-64 hex shown next to the package name field.</div></div></div>
+        <div class="step"><div class="step-n">8</div><div><div class="step-t">Generate Thumbnail (Studio → section 7)</div><div class="step-d">The thumbnail auto-fills from your title/author/tags. Pick a style, optionally upload a background image, download the PNG to use as a preview or share with your mod.</div></div></div>
+        <div class="step"><div class="step-n">9</div><div><div class="step-t">Save .package &amp; Test In-Game</div><div class="step-d">Drop the <code>.package</code> into your <code>Mods\</code> folder. Launch Sims 4, have a Sim watch WickedWhims porn TV — your video should appear in the selector!</div></div></div>
+      </div>
+      <div class="blue-box"><strong>Tip:</strong> The .bat processes every <code>.mp4</code> in <code>MP4\</code> in one run — batch encode multiple videos, then generate a separate XML for each one in the Studio tab.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+<script>
+// ── TABS ──
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── FNV-64 ──
+function fnv64(str){
+  const P=0x00000100000001b3n,O=0xcbf29ce484222325n,M=0xFFFFFFFFFFFFFFFFn;
+  let h=O;
+  for(const b of new TextEncoder().encode(str.toLowerCase())){h^=BigInt(b);h=(h*P)&M;}
+  return h;
+}
+
+// ── FILE NAME LIVE UPDATE ──
+// vid-filename -> auto-fill title (cleaned up for display)
+document.getElementById('vid-filename').addEventListener('input',function(){
+  const raw=this.value.trim();
+  // Auto-fill title: split on camelCase, numbers, underscores, spaces
+  const title=raw
+    .replace(/([a-z])([A-Z])/g,'$1 $2')
+    .replace(/([A-Za-z])([0-9])/g,'$1 $2')
+    .replace(/([0-9])([A-Za-z])/g,'$1 $2')
+    .replace(/[_-]+/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+  const tEl=document.getElementById('vid-title');
+  if(!tEl._manual) tEl.value=title;
+  updateFileNames();
+});
+// allow manual title override
+document.getElementById('vid-title').addEventListener('input',function(){
+  this._manual=!!this.value;
+  updateFileNames();
+});
+document.getElementById('vid-author').addEventListener('input',function(){
+  updateFileNames();
+});
+document.getElementById('vid-asset').addEventListener('input',function(){
+  const v=this.value.trim(),el=document.getElementById('asset-preview');
+  if(!v){el.textContent='376840d7:00000000:????????????????';el.style.cssText='color:var(--muted);font-style:italic;font-size:11px';}
+  else{el.textContent='376840d7:00000000:'+v.toUpperCase().padStart(16,'0');el.style.cssText='color:var(--accent2);font-size:12px';}
+  updateFileNames();
+});
+
+function getBaseId(){
+  const author=document.getElementById('vid-author').value.trim()||'YourName';
+  const filename=document.getElementById('vid-filename').value.trim()||'VideoName';
+  const asset=(document.getElementById('vid-asset').value.trim()||'').toUpperCase().padStart(16,'0');
+  // Base name uses filename (cleaned: no spaces/special chars) as video identifier
+  const cleanFile=filename.replace(/[^a-zA-Z0-9]/g,'');
+  const base=`${author}:VIDEO_${cleanFile}`;
+  return {author,filename,cleanFile,asset,base};
+}
+function updateFileNames(){
+  const {base}=getBaseId();
+  const names=[
+    ['fn-ww',  base+'_WW.OBJ.TUNING'],
+    ['fn-ia',  base+'_CE.PASSTHROUGH.INTERACTION'],
+    ['fn-ex',  base+'_CE.ExitCondition'],
+  ];
+  names.forEach(([id,name])=>{
+    const h=fnv64(name),hex=h.toString(16).toUpperCase().padStart(16,'0');
+    const el=document.getElementById(id);
+    if(el) el.textContent=hex;
+  });
+}
+
+// ── DURATION ──
+['dur-min','dur-sec'].forEach(id=>document.getElementById(id).addEventListener('input',updateDur));
+function updateDur(){
+  const t=(parseInt(document.getElementById('dur-min').value)||0)*60+(parseInt(document.getElementById('dur-sec').value)||0);
+  document.getElementById('dur-total').textContent=t+' second'+(t===1?'':'s')+' total';
+}
+function setDur(m,s){document.getElementById('dur-min').value=m;document.getElementById('dur-sec').value=s;updateDur();}
+
+// ── ORIENTATIONS ──
+document.querySelectorAll('.orient-opt').forEach(el=>{
+  el.addEventListener('click',()=>{el.classList.toggle('on');updateOrientSummary();renderThumb();});
+});
+
+const tagField=document.getElementById('tag-field');
+tagField.addEventListener('keydown',function(e){
+  if(e.key==='Enter'||e.key===','){e.preventDefault();const v=this.value.trim().replace(/,/g,'').toUpperCase().replace(/\s+/g,'_');if(v)addTag(v);this.value='';}
+  else if(e.key==='Backspace'&&this.value===''){const chips=document.querySelectorAll('#tag-wrap .chip');if(chips.length)chips[chips.length-1].remove();updateOrientSummary();}
+});
+tagField.addEventListener('blur',function(){
+  const v=this.value.trim().replace(/,/g,'').toUpperCase().replace(/\s+/g,'_');
+  if(v){addTag(v);this.value='';}
+});
+document.getElementById('tag-wrap').addEventListener('click',()=>tagField.focus());
+
+function addTag(val){
+  if(!val)return;
+  const ex=[...document.querySelectorAll('#tag-wrap .chip')].map(c=>c.dataset.val);
+  if(ex.includes(val))return;
+  const chip=document.createElement('span');
+  chip.className='chip';chip.dataset.val=val;
+  chip.innerHTML=val+'<button class="chip-del" onclick="this.closest(\'.chip\').remove();updateOrientSummary();renderThumb();">&times;</button>';
+  document.getElementById('tag-wrap').insertBefore(chip,tagField);
+  updateOrientSummary();renderThumb();
+}
+function updateOrientSummary(){
+  const all=getAllOrients();
+  const el=document.getElementById('orient-summary');
+  el.innerHTML=all.length?all.map(v=>`<span class="os-chip">${v}</span>`).join(''):'<span class="os-empty">No orientations selected</span>';
+}
+function getAllOrients(){
+  const s=[...document.querySelectorAll('.orient-opt.on')].map(e=>e.dataset.val);
+  const t=[...document.querySelectorAll('#tag-wrap .chip')].map(c=>c.dataset.val);
+  return [...s,...t];
+}
+
+// ── XML GENERATE ──
+function escX(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showErr(msg){const b=document.getElementById('err-xml');b.textContent=msg;b.classList.add('vis');setTimeout(()=>b.classList.remove('vis'),4000);}
+
+let _lastZipFiles=null;
+
+function buildXmlHash(name){
+  const h=fnv64(name);
+  return {hex:h.toString(16).toUpperCase().padStart(16,'0'), dec:h.toString(10)};
+}
+
+function generate(){
+  const {author:prefix, cleanFile, base:_base}=getBaseId();
+  const title=document.getElementById('vid-title').value.trim();
+  const author=document.getElementById('vid-author').value.trim();
+  const desc=document.getElementById('vid-desc').value.trim();
+  const icon=document.getElementById('vid-icon').value.trim()||'2F7D0004:00000000:D19DE7E9C0FA296B';
+  const asset=document.getElementById('vid-asset').value.trim();
+  const orients=getAllOrients();
+  const dur=(parseInt(document.getElementById('dur-min').value)||0)*60+(parseInt(document.getElementById('dur-sec').value)||0);
+  if(!filename)return showErr('⚠ Video Filename is required (Section 3).');
+  if(!prefix||prefix==='YourName')return showErr('⚠ Author Name is required (Section 3).');
+  if(!title)return showErr('⚠ Video Title is required.');
+  if(!author)return showErr('⚠ Author Name is required.');
+  if(!orients.length)return showErr('⚠ Select at least one orientation.');
+  if(!asset)return showErr('⚠ VP6 AVI Instance ID is required (Section 4).');
+  if(!/^[0-9a-fA-F]{1,16}$/.test(asset))return showErr('⚠ Instance ID must be hex (max 16 chars).');
+
+  const vid=asset.toUpperCase().padStart(16,'0');
+  const base=_base;
+
+  // ── 1. WickedVideoChannel (5B02819E) ──
+  const wwName=base+'_WW.OBJ.TUNING';
+  const ww=buildXmlHash(wwName);
+  const xml1=`<?xml version="1.0" encoding="utf-8"?>
+<I c="WickedVideoChannel" i="object_state" m="wickedwhims.sex.features.porn_watching.tv._ts4_channel_video" n="${escX(wwName)}" s="${ww.dec}">
+   <T n="video_raw_display_name">${escX(title)}</T>${descLine}
+   <T n="video_author">${escX(author)}</T>
+   <T n="video_display_icon">${escX(icon)}</T>
+   <T n="video_orientations">${orients.join(',')}</T>
+   <T n="video_duration">${dur}</T>
+   <T n="affordance">13310387700104523747</T>
+   <U n="new_client_state">
+      <V n="video_playlist" t="apply_new_value">
+         <V n="apply_new_value" t="start_video">
+            <U n="start_video">
+               <L n="clip_list">
+                  <T p="">376840D7:00000000:${vid}</T>
+               </L>
+            </U>
+         </V>
+      </V>
+      <V n="autonomy_modifiers" t="apply_new_value">
+         <V n="apply_new_value" t="apply_statistic_modifiers">
+            <U n="apply_statistic_modifiers">
+               <U n="periodic_statistic_change">
+                  <T n="interval">60</T>
+                  <L n="operations">
+                     <U><T n="amount">-1</T><T n="stat">16633</T></U>
+                  </L>
+               </U>
+            </U>
+         </V>
+      </V>
+      <V n="broadcaster" t="apply_new_value">
+         <V n="apply_new_value" t="start_broadcaster">
+            <U n="start_broadcaster">
+               <L n="broadcaster_types">
+                  <U><T n="item">74334</T></U>
+               </L>
+            </U>
+         </V>
+      </V>
+   </U>
+   <V n="_display_data" t="enabled">
+      <U n="enabled">
+         <V n="instance_display_description" t="enabled"><T n="enabled">0x9865B978</T></V>
+         <V n="instance_display_icon" t="disabled" />
+         <V n="instance_display_name" t="enabled"><T n="enabled">0x34407B57</T></V>
+      </U>
+   </V>
+   <L n="buff_weight_multipliers">
+      <U><T n="key">34527</T><T n="value">1</T></U>
+      <U><T n="key">34526</T><T n="value">1</T></U>
+      <U><T n="key">34525</T><T n="value">1</T></U>
+      <U><T n="key">34524</T><T n="value">1</T></U>
+      <U><T n="key">34523</T><T n="value">0</T></U>
+   </L>
+   <V n="value" t="integral"><T n="integral">604</T></V>
+</I>`;
+
+  // ── 2. ImmediateSuperInteraction (E882D22F) ──
+  const iaName=base+'_CE.PASSTHROUGH.INTERACTION';
+  const ia=buildXmlHash(iaName);
+  const xml3=`<?xml version="1.0" encoding="utf-8"?>
+<I c="ImmediateSuperInteraction" i="interaction" m="interactions.base.immediate_interaction" n="${escX(iaName)}" s="${ia.dec}">
+   <T n="display_name">0x${toHex8(kCeTitle)}</T>
+   <V n="display_tooltip" t="enabled">
+      <T n="enabled">0x${toHex8(kCeDesc)}</T>
+   </V>
+   <V n="outcome" t="single">
+      <U n="single">
+         <U n="actions">
+            <L n="basic_extras">
+               <V t="loot">
+                  <U n="loot">
+                     <L n="loot_list">
+                        <T>13785909837673828001</T>
+                     </L>
+                     <U n="success_chance">
+                        <T n="base_chance">100</T>
+                     </U>
+                     <V n="timing" t="at_beginning">
+                        <U n="at_beginning" />
+                     </V>
+                  </U>
+               </V>
+            </L>
+            <L n="continuation">
+               <U>
+                  <T n="affordance">${ceAffordance}</T>
+                  <E n="target">Object</E>
+               </U>
+            </L>
+         </U>
+      </U>
+   </V>
+   <V n="pie_menu_icon" t="enabled">
+      <V n="enabled" t="resource_key">
+         <U n="resource_key">
+            <T n="key">00B2D882:00000000:${vid}</T>
+         </U>
+      </V>
+   </V>
+   <T n="pie_menu_priority">0</T>
+   <L n="test_globals">
+      <V t="test_set_reference">
+         <T n="test_set_reference">15610208496863675011</T>
+      </V>
+   </L>
+   <L n="tests">
+      <L>
+         <V t="test_set_reference">
+            <T n="test_set_reference">15610207397352046897</T>
+         </V>
+         <V t="test_set_reference">
+            <T n="test_set_reference">15610207397352046905</T>
+         </V>
+         <V t="test_set_reference">
+            <T n="test_set_reference">15610207397352046905</T>
+         </V>
+      </L>
+   </L>
+</I>`;
+
+  // ── 3. ExitCondition (7DF2169C) ──
+  const exName=base+'_CE.ExitCondition';
+  const ex=buildXmlHash(exName);
+  const xml4=`<?xml version="1.0" encoding="utf-8"?>
+<I c="ExitCondition" i="snippet" m="snippets" n="${escX(exName)}" s="${ex.dec}">
+   <U n="value">
+      <L n="conditions">
+         <V t="time_based">
+            <U n="time_based">
+               <T n="max_time">${dur}</T>
+               <T n="min_time">${dur}</T>
+            </U>
+         </V>
+      </L>
+      <E n="interaction_action">EXIT_NATURALLY</E>
+   </U>
+</I>`;
+
+  const files=[
+    {name:`S4_5B02819E_00000000_${ww.hex}____XML.xml`, content:xml1, label:'WW Channel', color:'#e8a030'},
+    {name:`S4_E882D22F_00000000_${ia.hex}____XML.xml`, content:xml3, label:'Interaction', color:'#50c878'},
+    {name:`S4_7DF2169C_00000000_${ex.hex}____XML.xml`, content:xml4, label:'Exit Condition', color:'#e05050'},
+  ];
+  _lastZipFiles=files;
+
+  // Show result list
+  const list=document.getElementById('xml-file-list');
+  list.innerHTML=files.map((f,i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px">
+      <div style="display:flex;align-items:center;gap:8px;min-width:0">
+        <span style="width:8px;height:8px;border-radius:50%;background:${f.color};flex-shrink:0"></span>
+        <span style="font-family:var(--mono);font-size:10.5px;color:var(--accent2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span>
+      </div>
+      <div style="display:flex;gap:5px;flex-shrink:0">
+        <button class="btn-sm" onclick="copyOneXml(${i})" style="padding:3px 9px;font-size:11px">Copy</button>
+        <button class="btn-sm p" onclick="dlOneXml(${i})" style="padding:3px 9px;font-size:11px">⬇</button>
+      </div>
+    </div>`).join('');
+  document.getElementById('result').style.display='block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  // Auto-download zip
+  dlAllZip();
+}
+
+function dlOneXml(i){
+  if(!_lastZipFiles)return;
+  const f=_lastZipFiles[i];
+  const a=document.createElement('a');
+  const mime=f.binary?'application/octet-stream':'application/xml';
+  a.href=URL.createObjectURL(new Blob([f.content],{type:mime}));
+  a.download=f.name; a.click(); URL.revokeObjectURL(a.href);
+}
+function copyOneXml(i){
+  if(!_lastZipFiles)return;
+  navigator.clipboard.writeText(_lastZipFiles[i].content).then(()=>{
+    const btns=document.querySelectorAll('#xml-file-list .btn-sm:not(.p)');
+    const b=btns[i],o=b.textContent;
+    b.textContent='✓'; b.style.color='var(--green)';
+    setTimeout(()=>{b.textContent=o;b.style.color='';},1800);
+  });
+}
+async function dlAllZip(){
+  if(!_lastZipFiles)return;
+  if(typeof JSZip==='undefined'){
+    // Fallback: download individually
+    _lastZipFiles.forEach(f=>dlOneXml(_lastZipFiles.indexOf(f)));
+    return;
+  }
+  const zip=new JSZip();
+  _lastZipFiles.forEach(f=>zip.file(f.name, f.content));
+  const blob=await zip.generateAsync({type:'blob'});
+  const {cleanFile:zipName}=getBaseId();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${zipName||'mod'}_xml_files.zip`;
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+// ── BATCH ENCODER ──
+document.getElementById('b-quant').addEventListener('input',buildBat);
+document.getElementById('b-cbr').addEventListener('change',buildBat);
+document.getElementById('b-ratemode').addEventListener('change',function(){
+  const cbr=this.value==='cbr';
+  document.getElementById('cbr-wrap').style.display=cbr?'grid':'none';
+  document.getElementById('quant-wrap').style.display=cbr?'none':'grid';
+  buildBat();
+});
+document.getElementById('b-res').addEventListener('change',function(){
+  document.getElementById('b-cres-wrap').style.display=this.value==='custom'?'grid':'none';
+  buildBat();
+});
+['b-fps','b-asr','b-cres','b-quant'].forEach(id=>{
+  const el=document.getElementById(id);if(el)el.addEventListener('input',buildBat);
+});
+
+function getBatRes(){
+  const el=document.getElementById('b-res');
+  return el.value==='custom'?(document.getElementById('b-cres').value.trim()||'480x272'):el.value;
+}
+
+function generateBat(){
+  const res=getBatRes();
+  const fps=document.getElementById('b-fps').value;
+  const asr=document.getElementById('b-asr').value;
+  const inf='MP4';
+  const scaleRes=res.replace('x',':');
+  const rateMode=document.getElementById('b-ratemode').value;
+  const quant=rateMode==='cbr'?null:document.getElementById('b-quant').value;
+  const cbr=document.getElementById('b-cbr').value;
+  const rateParam=rateMode==='cbr'?`bitrate=${parseInt(cbr)*1000}`:`quant=${quant}`;
+
+  // ── Read video detail fields ──
+  const _v = id => { const e=document.getElementById(id); return e?e.value.trim():''; };
+  const gTitle    = _v('vid-title');
+  const gAuthor   = _v('vid-author');
+  const gDesc     = _v('vid-desc');
+  const gIcon     = _v('vid-icon')||'2F7D0004:00000000:D19DE7E9C0FA296B';
+  const gAsset    = (_v('vid-asset')||'').toUpperCase().padStart(16,'0');
+  const gFilename = _v('vid-filename');
+  const gPrefix   = gAuthor.replace(/\s+/g,'');
+  const gClean    = gFilename.replace(/[^a-zA-Z0-9]/g,'');
+  const gBase     = gPrefix+':VIDEO_'+gClean;
+  const gOrients  = getAllOrients().join(',') || 'BISEXUAL';
+  const gDur      = (parseInt(document.getElementById('dur-min')?.value||0)*60
+                   + parseInt(document.getElementById('dur-sec')?.value||0));
+
+  // Pre-compute hashes
+  const gWW  = fnv64(gBase+'_WW.OBJ.TUNING');
+  const gIA  = fnv64(gBase+'_CE.PASSTHROUGH.INTERACTION');
+  const gEX  = fnv64(gBase+'_CE.ExitCondition');
+  const hWW  = gWW.toString(16).toUpperCase().padStart(16,'0');
+  const hIA  = gIA.toString(16).toUpperCase().padStart(16,'0');
+  const hEX  = gEX.toString(16).toUpperCase().padStart(16,'0');
+  const dWW  = gWW.toString(10);
+  const dIA  = gIA.toString(10);
+  const dEX  = gEX.toString(10);
+
+  // ── Build XML strings using concatenation (safe inside outer template) ──
+  const ex = s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const dLine = gDesc ? '\n   <T n="video_raw_display_description">'+ex(gDesc)+'</T>' : '';
+  const nWW = ex(gBase+'_WW.OBJ.TUNING');
+  const nIA = ex(gBase+'_CE.PASSTHROUGH.INTERACTION');
+  const nEX = ex(gBase+'_CE.ExitCondition');
+
+  const buildXmlWW = () => [
+    '<?xml version="1.0" encoding="utf-8"?>',
+    '<I c="WickedVideoChannel" i="object_state" m="wickedwhims.sex.features.porn_watching.tv._ts4_channel_video" n="'+nWW+'" s="'+dWW+'">',
+    '   <T n="video_raw_display_name">'+ex(gTitle)+'</T>'+dLine,
+    '   <T n="video_author">'+ex(gAuthor)+'</T>',
+    '   <T n="video_display_icon">'+ex(gIcon)+'</T>',
+    '   <T n="video_orientations">'+gOrients+'</T>',
+    '   <T n="video_duration">'+gDur+'</T>',
+    '   <T n="affordance">13310387700104523747</T>',
+    '   <U n="new_client_state">',
+    '      <V n="video_playlist" t="apply_new_value"><V n="apply_new_value" t="start_video"><U n="start_video"><L n="clip_list"><T p="">376840D7:00000000:'+gAsset+'</T></L></U></V></V>',
+    '      <V n="autonomy_modifiers" t="apply_new_value"><V n="apply_new_value" t="apply_statistic_modifiers"><U n="apply_statistic_modifiers"><U n="periodic_statistic_change"><T n="interval">60</T><L n="operations"><U><T n="amount">-1</T><T n="stat">16633</T></U></L></U></U></V></V>',
+    '      <V n="broadcaster" t="apply_new_value"><V n="apply_new_value" t="start_broadcaster"><U n="start_broadcaster"><L n="broadcaster_types"><U><T n="item">74334</T></U></L></U></V></V>',
+    '   </U>',
+    '   <V n="_display_data" t="enabled"><U n="enabled"><V n="instance_display_description" t="enabled"><T n="enabled">0x9865B978</T></V><V n="instance_display_icon" t="disabled" /><V n="instance_display_name" t="enabled"><T n="enabled">0x34407B57</T></V></U></V>',
+    '   <L n="buff_weight_multipliers"><U><T n="key">34527</T><T n="value">1</T></U><U><T n="key">34526</T><T n="value">1</T></U><U><T n="key">34525</T><T n="value">1</T></U><U><T n="key">34524</T><T n="value">1</T></U><U><T n="key">34523</T><T n="value">0</T></U></L>',
+    '   <V n="value" t="integral"><T n="integral">604</T></V>',
+    '</I>'
+  ].join('\n');
+
+  const buildXmlIA = () => [
+    '<?xml version="1.0" encoding="utf-8"?>',
+    '<I c="ImmediateSuperInteraction" i="interaction" m="interactions.base.immediate_interaction" n="'+nIA+'" s="'+dIA+'">',
+    '   <T n="display_name">0xA410004C</T>',
+    '   <V n="display_tooltip" t="enabled"><T n="enabled">0xA410004D</T></V>',
+    '   <V n="outcome" t="single"><U n="single"><U n="actions"><L n="basic_extras"><V t="loot"><U n="loot"><L n="loot_list"><T>13785909837673828001</T></L><U n="success_chance"><T n="base_chance">100</T></U><V n="timing" t="at_beginning"><U n="at_beginning" /></V></U></V></L><L n="continuation"><U><T n="affordance">10226610056</T><E n="target">Object</E></U></L></U></U></V>',
+    '   <V n="pie_menu_icon" t="enabled"><V n="enabled" t="resource_key"><U n="resource_key"><T n="key">00B2D882:00000000:'+gAsset+'</T></U></V></V>',
+    '   <T n="pie_menu_priority">0</T>',
+    '   <L n="test_globals"><V t="test_set_reference"><T n="test_set_reference">15610208496863675011</T></V></L>',
+    '   <L n="tests"><L><V t="test_set_reference"><T n="test_set_reference">15610207397352046897</T></V><V t="test_set_reference"><T n="test_set_reference">15610207397352046905</T></V><V t="test_set_reference"><T n="test_set_reference">15610207397352046905</T></V></L></L>',
+    '</I>'
+  ].join('\n');
+
+  const buildXmlEX = () => [
+    '<?xml version="1.0" encoding="utf-8"?>',
+    '<I c="ExitCondition" i="snippet" m="snippets" n="'+nEX+'" s="'+dEX+'">',
+    '   <U n="value"><L n="conditions"><V t="time_based"><U n="time_based"><T n="max_time">'+gDur+'</T><T n="min_time">'+gDur+'</T></U></V></L><E n="interaction_action">EXIT_NATURALLY</E></U>',
+    '</I>'
+  ].join('\n');
+
+  // PowerShell write command (no nested template literals — uses string concat)
+  const psWrite = (outPath, xmlStr) =>
+    'powershell -NoProfile -Command "$c = @\'\'' + '\r\n' + xmlStr.replace(/\'/g,"\'\'") + '\r\n' + '\'\'; Set-Content -Path \''+outPath+'\' -Encoding UTF8 -Value $c"';
+
+  const fnWW  = 'S4_5B02819E_00000000_'+hWW+'____XML.xml';
+  const fnIA  = 'S4_E882D22F_00000000_'+hIA+'____XML.xml';
+  const fnEX  = 'S4_7DF2169C_00000000_'+hEX+'____XML.xml';
+  const xmlReady = !!(gTitle && gPrefix && gClean && gAsset.replace(/0/g,''));
+  const xmlBlock = xmlReady
+    ? psWrite('.\\XML\\'+fnWW, buildXmlWW())+'\r\n'
+      +psWrite('.\\XML\\'+fnIA, buildXmlIA())+'\r\n'
+      +psWrite('.\\XML\\'+fnEX, buildXmlEX())
+    : 'echo WARNING: Fill in Video Details ^& VP6 Instance ID in Studio tab first';
+
+  return `@echo off\r\nsetlocal enabledelayedexpansion\r\ncd /d "%~dp0"\r\n\r\n:: VP6_SIMS4_WW.bat - WickedWhims Video Toolkit\r\n:: ${res} @ ${fps}fps | VP6 quant=${quant} (1=best, 63=worst)\r\n:: Output: Release\\ -> S4PE Type 376840D7  Group 00000000
+:: Bonus:  Thumbnail\\ .png -> .DDS  -> S4PE Type 00B2D882  Group 00000000\r\n\r\necho.\r\necho ============================================================\r\necho  VP6_SIMS4_WW  ${res} @ ${fps}fps  ${rateParam}\r\necho ============================================================\r\necho.\r\n\r\n:: Check required tools\r\nif not exist "tools\\FFMPEG\\ffmpeg.exe"     (echo ERROR: tools\\FFMPEG\\ffmpeg.exe not found! && pause && exit /b 1)\r\nif not exist "tools\\texconv\\texconv.exe"   (echo ERROR: tools\\texconv\\texconv.exe not found! && pause && exit /b 1)\r\nif not exist "tools\\sx\\sx.exe"             (echo ERROR: tools\\sx\\sx.exe not found! && pause && exit /b 1)\r\nif not exist "tools\\VP6\\nihav-encoder.exe" (echo ERROR: tools\\VP6\\nihav-encoder.exe not found! && pause && exit /b 1)\r\nif not exist "tools\\quickbms\\quickbms.exe" (echo ERROR: tools\\quickbms\\quickbms.exe not found! && pause && exit /b 1)\r\nif not exist "tools\\quickbms\\eavp6_muxer.bms" (echo ERROR: tools\\quickbms\\eavp6_muxer.bms not found! && pause && exit /b 1)\r\nif not exist "${inf}\\*.mp4" (echo ERROR: No .mp4 files found in ${inf}\\ && pause && exit /b 1)\r\n\r\n:: Create working directories\r\nif not exist ".\\temp"          mkdir "temp"\r\nif not exist ".\\temp\\y4m"      mkdir "temp\\y4m"\r\nif not exist ".\\temp\\Wav"      mkdir "temp\\Wav"\r\nif not exist ".\\temp\\Final"    mkdir "temp\\Final"\r\nif not exist ".\\Release"       mkdir "Release"\r\nif not exist ".\\Thumbnail"     mkdir "Thumbnail"\r\n\r\nfor %%f in (${inf}\\*.mp4) do (mkdir "temp\\Final\\%%~nf" 2>nul)\r\n\r\n:: ============================================================\r\n:: STEP 1: MP4 -> Y4M uncompressed intermediate\r\n:: -vf scale uses colon syntax (WxH -> W:H)\r\n:: ============================================================\r\necho [1/5] MP4 to Y4M intermediate (${res} @ ${fps}fps)...\r\nfor %%f in (${inf}\\*.mp4) do (\r\n    set "filename=%%~nf"\r\n    echo   Encoding: !filename!\r\n    tools\\FFMPEG\\ffmpeg -y -i "%%f" -vf "scale=${scaleRes}" -r ${fps} -pix_fmt yuv420p -f yuv4mpegpipe ".\\temp\\y4m\\!filename!.y4m"\r\n    if errorlevel 1 (echo   FAILED: FFmpeg error on !filename! && pause && exit /b 1)\r\n    echo   OK: !filename!.y4m\r\n)\r\n\r\n:: ============================================================\r\n:: STEP 2: MP4 -> WAV audio\r\n:: ============================================================\r\necho [2/5] Extracting audio (${asr}Hz stereo)...\r\nfor %%f in (${inf}\\*.mp4) do (\r\n    set "filename=%%~nf"\r\n    tools\\FFMPEG\\ffmpeg -y -i "%%f" -acodec pcm_s16le -ar ${asr} -ac 2 ".\\temp\\Wav\\!filename!.wav"\r\n    if errorlevel 1 (echo   FAILED: audio extract error on !filename! && pause && exit /b 1)\r\n    echo   OK: !filename!.wav\r\n)\r\n\r\n:: ============================================================\r\n:: STEP 3: WAV -> EA Audio Stream\r\n:: ============================================================\r\necho [3/5] WAV to EA audio stream (fps${fps})...\r\nfor %%f in (temp\\WAV\\*.wav) do (\r\n    echo   sx: %%~nf\r\n    tools\\sx\\sx -sndstream -eaxa_blk -fps${fps} "temp\\WAV\\%%~nf.wav" -= ".\\temp\\final\\%%~nf\\%%~nf.asf"\r\n    if errorlevel 1 (echo   FAILED: sx error on %%~nf && pause && exit /b 1)\r\n    echo   OK: %%~nf.asf\r\n)\r\n\r\n:: ============================================================\r\n:: STEP 4: nihav-encoder -> EA VP6 directly from Y4M\r\n:: quant ${quant} (1=best quality, 63=worst)\r\n:: ============================================================\r\necho [4/5] nihav-encoder VP6 EA (${rateParam})...\r\nfor %%f in (temp\\y4m\\*.y4m) do (\r\n    set "filename=%%~nf"\r\n    echo   nihav: !filename!\r\n    tools\\VP6\\nihav-encoder --input "%%f" --output ".\\temp\\final\\!filename!\\!filename!.VP6" --output-format ea --ostream0 timebase=1/${fps},encoder=vp6,version=vp61,${rateParam}\r\n    if not exist ".\\temp\\final\\!filename!\\!filename!.VP6" (echo   FAILED: nihav produced no output for !filename! && pause && exit /b 1)\r\n    echo   OK: !filename!.VP6\r\n)\r\n\r\n:: ============================================================\r\n:: STEP 5: QuickBMS mux audio + video\r\n:: ============================================================\r\necho [5/5] QuickBMS mux...\r\nfor %%f in (${inf}\\*.mp4) do (\r\n    set "filename=%%~nf"\r\n    if exist ".\\temp\\final\\!filename!\\!filename!.VP6" (\r\n        echo   quickbms: !filename!\r\n        tools\\quickbms\\quickbms.exe -o tools\\quickbms\\eavp6_muxer.bms ".\\temp\\final\\!filename!" ".\\Release"\r\n        if errorlevel 1 (echo   FAILED: quickbms error for !filename! && pause && exit /b 1)\r\n    ) else (\r\n        echo   SKIP: !filename! - no .VP6 found\r\n    )\r\n)\r\n\r\n:: Rename output .ASF.vp6 or .vp6 -> .avi for S4PE\r\necho.\r\necho Renaming output to .avi for S4PE import...\r\nset "fcount=0"\r\nfor %%f in (Release\\*.vp6 Release\\*.ASF.vp6) do (\r\n    set "fullname=%%~nxf"\r\n    set "clean=!fullname:.ASF.vp6=.avi!"\r\n    set "clean=!clean:.vp6=.avi!"\r\n    ren "%%f" "!clean!"\r\n    echo   !clean!\r\n    set /a fcount+=1\r\n)\r\n\r\necho.\r\necho Cleaning up temp...\r\nrmdir /s /q temp\r\n\r\necho.\r\necho ============================================================\r\necho  DONE!  %fcount% file(s) in .\\Release\\\r\necho  Import each .avi into S4PE:\r\necho    Type: 376840D7   Group: 00000000\r\necho  Copy the Instance ID into the Studio tab\r\necho ============================================================\r\necho.\r\n\r\n:: ============================================================\r\n:: XML — Write tuning files for S4PE\r\n:: ============================================================\r\necho.\r\necho Writing XML tuning files...\r\nif not exist ".\\XML" mkdir "XML"\r\n${xmlBlock}\r\necho.\r\necho XML files written to .\\XML\\\r\necho Import into S4PE:\r\necho   5B02819E = WickedVideoChannel\r\necho   E882D22F = Interaction\r\necho   7DF2169C = ExitCondition\r\necho.\r\n\r\n:: ============================================================\r\n:: XML tuning files\r\n:: ============================================================\r\necho.\r\necho Writing XML tuning files to .\\XML\\...\r\nif not exist ".\\XML" mkdir "XML"\r\n${xmlBlock}\r\necho.\r\nif defined xmlReady (echo   Done: ${fnWW}) else (echo   Skipped.)\r\necho   ${fnIA}\r\necho   ${fnEX}\r\necho.\r\necho Import XMLs into S4PE:\r\necho   5B02819E = WickedVideoChannel\r\necho   E882D22F = Interaction\r\necho   7DF2169C = ExitCondition\r\necho.\r\n\r\n:: ============================================================\r\n:: BONUS: PNG -> DDS thumbnail conversion\r\n:: Drop any .png files into Thumbnail\ to convert them\r\n:: Output: Release\ -> S4PE Type 00B2D882  Group 00000000\r\n:: ============================================================\r\nif exist "Thumbnail\\*.png" (\r\n    echo Converting thumbnails to DDS...\r\n    if not exist "Release" mkdir "Release"\r\n    for %%f in (Thumbnail\\*.png) do (\r\n        echo   texconv: %%~nf\r\n        tools\\texconv\\texconv.exe -f DXT5 -y -o ".\\Release" "%%f"\r\n        if errorlevel 1 (echo   FAILED: DDS conversion for %%~nf) else (echo   OK: %%~nf.DDS)\r\n    )\r\n    echo.\r\n    echo DDS files in .\\Release\\ - import into S4PE:\r\n    echo   Type: 00B2D882   Group: 00000000\r\n    echo   Instance: use same hex ID as your video asset\r\n) else (\r\n    echo No thumbnails found in Thumbnail\\ - skipping DDS conversion\r\n)\r\n\r\nendlocal\r\npause`;}
+
+function buildBat(){
+  const q=parseInt(document.getElementById('b-quant').value)||42;
+  const labels=['','max quality','','','','','','','','','','','','','','','high quality','','','','','','','','','','','','','','','balanced','','','','','','','','','','','','','','','smaller file','','','','','','','','','','','','','','','','','min quality'];
+  const label=q<=15?'max quality':q<=30?'high quality':q<=45?'balanced':q<=55?'smaller file':'min quality';
+  const hint=document.getElementById('quant-hint');
+  if(hint) hint.textContent=`quant ${q} \u2014 ${label}`;
+  document.getElementById('bat-preview').textContent=generateBat();
+}
+function downloadBat(){const c=generateBat();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/plain'}));a.download='VP6_SIMS4_WW.bat';a.click();URL.revokeObjectURL(a.href);}
+function copyBat(){navigator.clipboard.writeText(generateBat()).then(()=>{const b=document.getElementById('bat-copy-btn'),o=b.textContent;b.textContent='Copied!';b.style.color='var(--green)';setTimeout(()=>{b.textContent=o;b.style.color='';},2000);});}
+
+// ── THUMBNAIL ──
+let _thumbBg=null;
+const TSTYLES={
+  dark:{bg1:'#0c0c0f',bg2:'#1a1a24',accent:'#e8a030',accent2:'#f0c060',text:'#e8e4dc',sub:'#8a8598'},
+  red:{bg1:'#0f0808',bg2:'#1f1010',accent:'#e05050',accent2:'#f08080',text:'#f0e0e0',sub:'#a08080'},
+  purple:{bg1:'#0d0812',bg2:'#1a1028',accent:'#a060f0',accent2:'#c090ff',text:'#e8e0f8',sub:'#8878a8'},
+  teal:{bg1:'#071212',bg2:'#0d2020',accent:'#30c8b0',accent2:'#60e8d0',text:'#d8f0ee',sub:'#60a090'},
+  minimal:{bg1:'#080808',bg2:'#111111',accent:'#ffffff',accent2:'#cccccc',text:'#ffffff',sub:'#888888'},
+};
+function renderThumb(){
+  const canvas=document.getElementById('thumb-canvas');if(!canvas)return;
+  const sizeEl=document.getElementById('th-size');
+  const S=parseInt(sizeEl?sizeEl.value:'128')||128;
+  canvas.width=S;canvas.height=S;
+  const ctx=canvas.getContext('2d');
+  const stEl=document.getElementById('th-style');
+  const st=TSTYLES[stEl?stEl.value:'dark']||TSTYLES.dark;
+  const _opa=document.getElementById('th-opacity');
+  const opacity=(parseInt(_opa?_opa.value:'60')||60)/100;
+  const _ttl=document.getElementById('vid-title');
+  const title=(_ttl?_ttl.value:'')||'Video';
+  const _aut=document.getElementById('vid-author');
+  const author=_aut?_aut.value:'';
+  const tags=getAllOrients().slice(0,3);
+
+  // Background
+  if(_thumbBg){
+    const ir=_thumbBg.width/_thumbBg.height;
+    let sx=0,sy=0,sw=_thumbBg.width,sh=_thumbBg.height;
+    if(ir>1){sw=_thumbBg.height;sx=(_thumbBg.width-sw)/2;}
+    else{sh=_thumbBg.width;sy=(_thumbBg.height-sh)/2;}
+    ctx.drawImage(_thumbBg,sx,sy,sw,sh,0,0,S,S);
+    ctx.fillStyle=st.bg1;ctx.globalAlpha=opacity;
+    ctx.fillRect(0,0,S,S);ctx.globalAlpha=1;
+  } else {
+    // Solid gradient — no grid lines (invisible at small size)
+    const grd=ctx.createLinearGradient(0,0,S,S);
+    grd.addColorStop(0,st.bg2);grd.addColorStop(1,st.bg1);
+    ctx.fillStyle=grd;ctx.fillRect(0,0,S,S);
+  }
+
+  // ── Thick top accent bar (visible at 128px) ──
+  const barH=Math.max(4, Math.round(S*0.055));
+  ctx.fillStyle=st.accent;ctx.fillRect(0,0,S,barH);
+
+  // ── Bottom title strip ──
+  const stripH=Math.round(S*0.34);
+  const gBot=ctx.createLinearGradient(0,S-stripH,0,S);
+  gBot.addColorStop(0,'rgba(0,0,0,0)');
+  gBot.addColorStop(0.4,st.bg1+'cc');
+  gBot.addColorStop(1,st.bg1+'ff');
+  ctx.fillStyle=gBot;ctx.fillRect(0,S-stripH,S,stripH);
+
+  // ── Title text — single line, truncated ──
+  const titleSz=Math.max(8, Math.round(S*0.115));
+  ctx.font=`700 ${titleSz}px sans-serif`;
+  ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  ctx.fillStyle=st.text;
+  // Truncate to fit
+  let t=title;
+  while(ctx.measureText(t).width > S-Math.round(S*0.1) && t.length>1) t=t.slice(0,-1);
+  if(t.length<title.length) t=t.trimEnd()+'…';
+  const titleY=S - Math.round(S*(tags.length?0.17:0.08));
+  ctx.fillText(t, S/2, titleY);
+
+  // ── Author line (only if S >= 128) ──
+  if(author && S>=128){
+    const authSz=Math.max(6, Math.round(S*0.078));
+    ctx.font=`400 ${authSz}px sans-serif`;
+    ctx.fillStyle=st.sub;
+    let a=author;
+    while(ctx.measureText(a).width > S-Math.round(S*0.12) && a.length>1) a=a.slice(0,-1);
+    if(a.length<author.length) a=a.trimEnd()+'…';
+    ctx.fillText(a, S/2, titleY + Math.round(authSz*1.3));
+  }}
+
+function _rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function downloadThumb(){const c=document.getElementById('thumb-canvas');if(!c)return;const t=(document.getElementById('vid-title').value||'thumbnail').replace(/[^a-z0-9]/gi,'_').toLowerCase();const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download=t+'_thumb.png';a.click();}
+
+// ── WIRE EVENTS ──
+document.getElementById('b-quant').addEventListener('input',buildBat);
+document.getElementById('b-cbr').addEventListener('change',buildBat);
+document.getElementById('b-ratemode').addEventListener('change',function(){
+  const cbr=this.value==='cbr';
+  document.getElementById('cbr-wrap').style.display=cbr?'grid':'none';
+  document.getElementById('quant-wrap').style.display=cbr?'none':'grid';
+  buildBat();
+});
+document.getElementById('b-res').addEventListener('change',function(){
+  document.getElementById('b-cres-wrap').style.display=this.value==='custom'?'grid':'none';
+  buildBat();
+});
+['b-fps','b-asr','b-cres'].forEach(id=>{
+  const el=document.getElementById(id);if(el)el.addEventListener('input',buildBat);
+});
+['vid-title','vid-author','vid-desc'].forEach(id=>{
+  const el=document.getElementById(id);if(el)el.addEventListener('input',renderThumb);
+});
+['th-style','th-size'].forEach(id=>{
+  const el=document.getElementById(id);if(el)el.addEventListener('change',renderThumb);
+});
+const _thOp=document.getElementById('th-opacity');
+if(_thOp)_thOp.addEventListener('input',function(){
+  const ov=document.getElementById('th-opacity-val');if(ov)ov.textContent=this.value+'%';renderThumb();
+});
+document.getElementById('th-bg').addEventListener('change',function(){
+  if(!this.files||!this.files[0]){_thumbBg=null;renderThumb();return;}
+  const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{_thumbBg=img;renderThumb();};img.src=e.target.result;};r.readAsDataURL(this.files[0]);
+});
+
+// ── LOCALSTORAGE AUTOSAVE ──
+const LS_KEY='ww_toolkit_v1';
+const SAVE_IDS=['vid-filename','vid-title','vid-author','vid-desc','vid-icon','vid-asset',
+  'dur-min','dur-sec','b-res','b-fps','b-quant','b-cbr','b-ratemode','b-asr','b-cres','th-style','th-size','th-opacity','th-opacity'];
+
+function saveState(){
+  try{
+    const d={};
+    SAVE_IDS.forEach(id=>{const el=document.getElementById(id);if(el)d[id]=el.value;});
+    d._orients=[...document.querySelectorAll('.orient-opt.on')].map(e=>e.dataset.val);
+    d._tags=[...document.querySelectorAll('#tag-wrap .chip')].map(c=>c.dataset.val);
+    d._title_manual=document.getElementById('vid-title')._manual||false;
+    localStorage.setItem(LS_KEY,JSON.stringify(d));
+  }catch(e){}
+}
+function loadState(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);if(!raw)return;
+    const d=JSON.parse(raw);
+    SAVE_IDS.forEach(id=>{const el=document.getElementById(id);if(el&&d[id]!==undefined)el.value=d[id];});
+    if(d._title_manual)document.getElementById('vid-title')._manual=true;
+    document.querySelectorAll('.orient-opt').forEach(el=>{
+      el.classList.toggle('on',(d._orients||[]).includes(el.dataset.val));
+    });
+    (d._tags||[]).forEach(v=>addTag(v));
+  }catch(e){}
+}
+SAVE_IDS.forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',saveState);});
+document.querySelectorAll('.orient-opt').forEach(el=>el.addEventListener('click',saveState));
+
+// ── INIT ──
+loadState();
+// Restore rate mode visibility
+(function(){
+  const rm=document.getElementById('b-ratemode');
+  if(rm){
+    const cbr=rm.value==='cbr';
+    const cw=document.getElementById('cbr-wrap');
+    const qw=document.getElementById('quant-wrap');
+    if(cw) cw.style.display=cbr?'grid':'none';
+    if(qw) qw.style.display=cbr?'none':'grid';
+  }
+})();
+// Restore asset preview
+(function(){
+  const a=document.getElementById('vid-asset');
+  if(a&&a.value){
+    const v=a.value.trim();
+    const el=document.getElementById('asset-preview');
+    if(el){el.textContent='376840d7:00000000:'+v.toUpperCase().padStart(16,'0');el.style.cssText='color:var(--accent2);font-size:12px';}
+  }
+})();
+const _fn=document.getElementById('vid-filename');
+if(_fn&&_fn.value)_fn.dispatchEvent(new Event('input'));
+updateFileNames();updateDur();updateOrientSummary();buildBat();renderThumb();
+</script>
+</body>
+</html>
