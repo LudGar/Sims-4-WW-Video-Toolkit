@@ -71,7 +71,6 @@
                     <div style="font-size:11px;color:var(--muted);line-height:1.7">
                         <strong style="color:var(--text)">S4PE</strong> — to import the encoded <code style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--accent2);font-family:var(--mono)">.avi</code> file and get its Instance ID. No .package needed upfront — S4PE can create one from scratch during import.<br><br>
                         <strong style="color:var(--text)">WickedWhims</strong> installed in your Sims 4 Mods folder for in-game testing.
-                    </div>
                 </div>
             </div>
         </div>
@@ -84,7 +83,7 @@
                     <div class="snum">1</div>
                     <div class="stitle">Thumbnail Generator</div>
                 </div>
-                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Create the icon shown in the WW video selector. Download as PNG, drop in <code>Thumbnail\</code> — the bat converts it to DDS automatically.</div>
+                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Create the icon shown in the WW video selector. Download as PNG, drop in <code>ICO\</code> — the bat converts it to DDS automatically.</div>
                 <div class="sbody">
                     <div class="field-row">
                         <div class="field">
@@ -130,7 +129,7 @@
                 <div class="sbody">
                     <div class="field">
                         <label>Video Filename <span class="req">*</span><span class="hint">paste your .mp4 name (no extension) — auto-fills title</span></label>
-                        <input type="text" id="vid-filename" class="mono" placeholder="IrisCowgirl2Blender3D4K144fps" autocomplete="off" spellcheck="false">
+                        <input type="text" id="vid-filename" class="mono" placeholder=" Filename ..." autocomplete="off" spellcheck="false">
                     </div>
                     <div class="field-row">
                         <div class="field"><label>Display Title <span class="req">*</span><span class="hint">auto-filled · editable</span></label><input type="text" id="vid-title" placeholder="Name of Your Video"></div>
@@ -146,11 +145,11 @@
                     <div class="snum">4</div>
                     <div class="stitle">Orientation &amp; Duration</div>
                 </div>
-                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Add tags that describe the video content (e.g. POV, COWGIRL) and set the exact duration in minutes and seconds.</div>
+                <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Add tags that describe the video content and set the exact duration in minutes and seconds.</div>
                 <div class="sbody">
                     <div class="field">
                         <label>Tags <span class="hint">Enter or comma to add</span></label>
-                        <div class="tag-wrap" id="tag-wrap"><input type="text" id="tag-field" class="tag-field" placeholder="e.g. THREESOME, SOLO…"></div>
+                        <div class="tag-wrap" id="tag-wrap"><input type="text" id="tag-field" class="tag-field" placeholder=" Tags here…"></div>
                     </div>
                     <div class="field">
                         <label>Active values <span class="hint">written to XML</span></label>
@@ -184,25 +183,24 @@
                 </div>
                 <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Configure encoding settings, then download the bat. Run it from your COMPILER folder — it encodes the video, writes the XML files, and converts the thumbnail.</div>
                 <div class="sbody">
-                    <div class="blue-box" style="font-size:11px">Configure encoding, then download the <code>.bat</code>. It encodes VP6, converts the thumbnail PNG to DDS, and writes the XML files — all in one run. Also needs <a href="https://github.com/microsoft/DirectXTex/releases" target="_blank">texconv</a> in <code>tools\texconv\</code> for DDS.</div>
+                    <div class="blue-box" style="font-size:11px">Configure encoding, then download the <code>.bat</code>. It encodes VP6, converts the thumbnail PNG to DDS, and writes the XML files — all in one run.</div>
                     <div class="field-row">
                         <div class="field">
                             <label>Resolution</label>
                             <select id="b-res">
-                                <option value="480x272" selected>480×272 SD</option>
-                                <option value="512x288">512×288 SD+</option>
-                                <option value="640x272">640×272 wide</option>
-                                <option value="1024x576">1024×576 HD</option>
-                                <option value="320x176">320×176 small</option>
+                                <option value="480x272">480×272 SD</option>
+                                <option value="512x288">512×288 (default)</option>
+                                <option value="640x272">640×272 HQ</option>
+                                <option value="1024x576" selected>1024×576 HD</option>
                                 <option value="custom">Custom…</option>
                             </select>
                         </div>
                         <div class="field">
                             <label>Frame Rate</label>
                             <select id="b-fps">
-                                <option value="15" selected>15 fps ✓</option>
+                                <option value="15">15 fps (default)</option>
                                 <option value="24">24 fps</option>
-                                <option value="30">30 fps</option>
+                                <option value="30" selected>30 fps</option>
                             </select>
                         </div>
                     </div>
@@ -223,7 +221,7 @@
                             <select id="b-cbr">
                                 <option value="1000">1000 kbps</option>
                                 <option value="1500">1500 kbps</option>
-                                <option value="2000">2000 kbps</option>
+                                <option value="2000">2000 kbps (default)</option>
                                 <option value="3000">3000 kbps</option>
                                 <option value="4000" selected>4000 kbps</option>
                                 <option value="6000">6000 kbps</option>
@@ -240,7 +238,7 @@
                         </div>
                         <div id="b-cres-wrap" style="display:none" class="field">
                             <label>Custom Resolution</label>
-                            <input type="text" id="b-cres" class="mono" placeholder="480x272">
+                            <input type="text" id="b-cres" class="mono" placeholder="512x288">
                         </div>
                     </div>
                 </div>
