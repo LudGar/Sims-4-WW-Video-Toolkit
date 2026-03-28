@@ -368,45 +368,32 @@ input[type=range] {
 }
 
 .orient-opt {
-	display: flex;
-	align-items: center;
-	gap: 7px;
-	padding: 6px 9px;
+	background: var(--bg2);
 	border: 1px solid var(--border);
 	border-radius: 7px;
+	color: var(--sub);
 	cursor: pointer;
-	transition: all .15s;
-	user-select: none
+	font-family: var(--mono);
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: .04em;
+	padding: 9px 10px;
+	text-align: center;
+	text-transform: uppercase;
+	transition: border-color .15s, background .15s, color .15s;
+	user-select: none;
+	width: 100%
 }
 
 .orient-opt:hover {
-	border-color: var(--border2)
+	border-color: var(--border2);
+	color: var(--text)
 }
 
 .orient-opt.on {
+	background: color-mix(in srgb, var(--accent) 12%, var(--bg2));
 	border-color: var(--accent);
-	background: #1a1400
-}
-
-.ochk {
-	width: 16px;
-	height: 16px;
-	border-radius: 4px;
-	border: 1px solid var(--border);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0
-}
-
-.orient-opt.on .ochk {
-	background: var(--accent);
-	border-color: var(--accent)
-}
-
-.olbl {
-	font-size: 11px;
-	font-weight: 600
+	color: var(--accent)
 }
 
 .orient-summary {
@@ -432,47 +419,7 @@ input[type=range] {
 	font-style: italic
 }
 
-/* ── TAGS ── */
-.tag-wrap {
-	background: var(--bg);
-	border: 1px solid var(--border);
-	border-radius: 7px;
-	display: flex;
-	flex-wrap: wrap;
-	gap: 5px;
-	padding: 5px 8px;
-	cursor: text;
-	min-height: 34px;
-	align-items: center
-}
-
-.tag-wrap:focus-within {
-	border-color: var(--accent)
-}
-
-.chip {
-	background: var(--bg3);
-	border: 1px solid var(--border2);
-	border-radius: 5px;
-	color: var(--accent2);
-	font-size: 10px;
-	font-weight: 600;
-	padding: 2px 6px;
-	display: flex;
-	align-items: center;
-	gap: 4px
-}
-
-.chip-del {
-	background: none;
-	border: none;
-	color: var(--muted);
-	cursor: pointer;
-	font-size: 12px;
-	padding: 0;
-	line-height: 1
-}
-
+/* ── TAG FIELD (legacy, kept for safety) ── */
 .tag-field {
 	background: none;
 	border: none;
