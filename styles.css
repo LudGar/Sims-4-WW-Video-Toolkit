@@ -360,6 +360,14 @@ input[type=range] {
 	font-weight: 600
 }
 
+/* ── SETUP COLUMNS ── */
+.setup-cols {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+	align-items: start
+}
+
 /* ── ORIENTATION ── */
 .orient-grid {
 	display: grid;
