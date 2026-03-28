@@ -56,8 +56,6 @@ function updateFileNames() {
         ['fn-avi', base],
         ['fn-img', base],
         ['fn-ww', base + '_WW.OBJ.TUNING'],
-        ['fn-ia', base + '_CE.PASSTHROUGH.INTERACTION'],
-        ['fn-ex', base + '_CE.ExitCondition'],
     ];
     names.forEach(([id, name]) => {
         const h = fnv64(name),
@@ -97,41 +95,6 @@ document.querySelectorAll('.orient-opt').forEach(el => {
         saveState();
     });
 });
-const tagField = document.getElementById('tag-field');
-tagField.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        const v = this.value.trim().replace(/,/g, '').toUpperCase().replace(/\s+/g, '_');
-        if (v) addTag(v);
-        this.value = '';
-    } else if (e.key === 'Backspace' && this.value === '') {
-        const chips = document.querySelectorAll('#tag-wrap .chip');
-        if (chips.length) chips[chips.length - 1].remove();
-        updateOrientSummary();
-        buildBat();
-    }
-});
-tagField.addEventListener('blur', function() {
-    const v = this.value.trim().replace(/,/g, '').toUpperCase().replace(/\s+/g, '_');
-    if (v) {
-        addTag(v);
-        this.value = '';
-    }
-});
-document.getElementById('tag-wrap').addEventListener('click', () => tagField.focus());
-
-function addTag(val) {
-    if (!val) return;
-    const ex = [...document.querySelectorAll('#tag-wrap .chip')].map(c => c.dataset.val);
-    if (ex.includes(val)) return;
-    const chip = document.createElement('span');
-    chip.className = 'chip';
-    chip.dataset.val = val;
-    chip.innerHTML = val + '<button class="chip-del" onclick="this.closest(\'.chip\').remove();updateOrientSummary();buildBat();">&times;</button>';
-    document.getElementById('tag-wrap').insertBefore(chip, tagField);
-    updateOrientSummary();
-    buildBat();
-}
 
 function updateOrientSummary() {
     const all = getAllOrients();
@@ -140,9 +103,7 @@ function updateOrientSummary() {
 }
 
 function getAllOrients() {
-    const s = [...document.querySelectorAll('.orient-opt.on')].map(e => e.dataset.val);
-    const t = [...document.querySelectorAll('#tag-wrap .chip')].map(c => c.dataset.val);
-    return [...s, ...t];
+    return [...document.querySelectorAll('.orient-opt.on')].map(e => e.dataset.val);
 }
 
 // ── BAT GENERATOR ──
@@ -180,21 +141,9 @@ function generateBat() {
         parseInt(document.getElementById('dur-sec')?.value || 0));
 
     const gWW = fnv64(gBase + '_WW.OBJ.TUNING');
-    const gCE = fnv64(gBase + '_CE.OBJ.TUNING');
-    const gIA = fnv64(gBase + '_CE.PASSTHROUGH.INTERACTION');
-    const gEX = fnv64(gBase + '_CE.ExitCondition');
     const hWW = gWW.toString(16).toUpperCase().padStart(16, '0');
-    const hCE = gCE.toString(16).toUpperCase().padStart(16, '0');
-    const hIA = gIA.toString(16).toUpperCase().padStart(16, '0');
-    const hEX = gEX.toString(16).toUpperCase().padStart(16, '0');
     const dWW = gWW.toString(10);
-    const dCE = gCE.toString(10);
-    const dIA = gIA.toString(10);
-    const dEX = gEX.toString(10);
     const fnWW = 'S4_5B02819E_00000000_' + hWW + '____XML.xml';
-    const fnCE = 'S4_5B02819E_00000000_' + hCE + '____XML.xml';
-    const fnIA = 'S4_E882D22F_00000000_' + hIA + '____XML.xml';
-    const fnEX = 'S4_7DF2169C_00000000_' + hEX + '____XML.xml';
     const gAVI = fnv64(gBase);
     const hAVI = gAVI.toString(16).toUpperCase().padStart(16, '0');
     const fnAVI = 'S4_376840D7_00000000_' + hAVI + '____AVI.avi';
@@ -203,9 +152,6 @@ function generateBat() {
 
     const ex = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const nWW = ex(gBase + '_WW.OBJ.TUNING');
-    const nCE = ex(gBase + '_CE.OBJ.TUNING');
-    const nIA = ex(gBase + '_CE.PASSTHROUGH.INTERACTION');
-    const nEX = ex(gBase + '_CE.ExitCondition');
 
     // echo-redirect XML builder (cmd.exe safe, no PowerShell needed)
     const xmlToBat = (lines, outPath) => {
@@ -221,15 +167,15 @@ function generateBat() {
         ...(gDesc ? ['   <T n="video_raw_display_description">' + ex(gDesc) + '</T>'] : []),
         '   <T n="video_author">' + ex(gAuthor) + '</T>',
         '   <T n="video_display_icon">' + ex(gIcon) + '</T>',
+        '',
         '   <T n="video_orientations">' + gOrients + '</T>',
         '   <T n="video_duration">' + gDur + '</T>',
-        '   <T n="affordance">13310387700104523747</T>',
         '   <U n="new_client_state">',
         '      <V n="video_playlist" t="apply_new_value">',
         '         <V n="apply_new_value" t="start_video">',
         '            <U n="start_video">',
         '               <L n="clip_list">',
-        '                 <T p="">376840D7:00000000:' + hAVI + '</T></L></U></V></V>',
+        '                  <T p="">376840D7:00000000:' + hAVI + '</T></L></U></V></V>',
         '',
         '      <V n="autonomy_modifiers" t="apply_new_value">',
         '         <V n="apply_new_value" t="apply_statistic_modifiers">',
@@ -248,118 +194,23 @@ function generateBat() {
         '   <V n="_display_data" t="enabled">',
         '      <U n="enabled">',
         '         <V n="instance_display_description" t="enabled"><T n="enabled">0x9865B978</T></V>',
-        '         <V n="instance_display_icon" t="disabled"/>',
+        '         <V n="instance_display_icon" t="disabled" />',
         '         <V n="instance_display_name" t="enabled"><T n="enabled">0x34407B57</T></V></U></V>',
         '',
+        '   <T n="affordance">13310387700104523747</T>',
         '   <L n="buff_weight_multipliers">',
         '      <U><T n="key">34527</T><T n="value">1</T></U>',
         '      <U><T n="key">34526</T><T n="value">1</T></U>',
         '      <U><T n="key">34525</T><T n="value">1</T></U>',
         '      <U><T n="key">34524</T><T n="value">1</T></U>',
-        '      <U><T n="key">34523</T><T n="value">0</T></U></L>',
+        '      <U><T n="key">34523</T><T n="value">0.0</T></U></L>',
         '',
-        '   <V n="value" t="integral"><T n="integral">604</T></V></I>',
+        '   <V n="value" t="integral"><T n="integral">700</T></V></I>',
     ], '.\\OUT\\' + fnWW);
 
-    const buildXmlIA = () => xmlToBat([
-        '<I c="ImmediateSuperInteraction" i="interaction" m="interactions.base.immediate_interaction" n="' + nIA + '" s="' + dIA + '">',
-        '',
-        '   <T n="display_name">0xA410004C</T>',
-        '   <V n="display_tooltip" t="enabled">',
-        '   <T n="enabled">0xA410004D</T></V>',
-        '   <V n="outcome" t="single">',
-        '      <U n="single">',
-        '         <U n="actions">',
-        '            <L n="basic_extras">',
-        '               <V t="loot">',
-        '                  <U n="loot">',
-        '                     <L n="loot_list">',
-        '                        <T>13785909837673828001</T></L>',
-        '',
-        '                     <U n="success_chance">',
-        '                        <T n="base_chance">100</T></U>',
-        '',
-        '                     <V n="timing" t="at_beginning">',
-        '                        <U n="at_beginning" /></V></U></V></L>',
-        '',
-        '            <L n="continuation">',
-        '               <U><T n="affordance">10226610056</T>',
-        '                  <E n="target">Object</E></U></L></U></U></V>',
-        '',
-        '   <V n="pie_menu_icon" t="enabled">',
-        '      <V n="enabled" t="resource_key">',
-        '         <U n="resource_key">',
-        '            <T n="key">00B2D882:00000000:' + hAVI + '</T></U></V></V>',
-        '',
-        '   <T n="pie_menu_priority">0</T>',
-        '   <L n="test_globals">',
-        '      <V t="test_set_reference">',
-        '         <T n="test_set_reference">15610208496863675011</T></V></L>',
-        '',
-        '   <L n="tests">',
-        '      <L><V t="test_set_reference">',
-        '            <T n="test_set_reference">15610207397352046897</T></V>',
-        '         <V t="test_set_reference">',
-        '            <T n="test_set_reference">15610207397352046905</T></V>',
-        '         <V t="test_set_reference">',
-        '            <T n="test_set_reference">15610207397352046905</T></V></L></L></I>',
-    ], '.\\OUT\\' + fnIA);
+    const xmlBlock = buildXmlWW();
 
-    const buildXmlEX = () => xmlToBat([
-        '<I c="ExitCondition" i="snippet" m="snippets" n="' + nEX + '" s="' + dEX + '">',
-        '   <U n="value">',
-        '      <L n="conditions">',
-        '         <V t="time_based">',
-        '            <U n="time_based">',
-        '               <T n="max_time">' + gDur + '</T>',
-        '               <T n="min_time">' + gDur + '</T></U></V></L>',
-        '      <E n="interaction_action">EXIT_NATURALLY</E></U></I>',
-    ], '.\\OUT\\' + fnEX);
-
-    const buildXmlCE = () => xmlToBat([
-        '<I c="VideoChannel" i="object_state" m="objects.components.state" n="' + nCE + '" s="' + dCE + '">',
-        '',
-        '   <V n="_display_data" t="enabled">',
-        '      <U n="enabled">',
-        '         <V n="instance_display_icon" t="disabled" />',
-        '         <V n="instance_display_name" t="enabled"><T n="enabled">0xA410004C</T></V>',
-        '         <V n="instance_display_description" t="enabled"><T n="enabled">0xA410004D</T></V></U></V>',
-        '',
-        '   <T n="affordance">10226610056</T>',
-        '   <U n="new_client_state">',
-        '      <V n="video_playlist" t="apply_new_value">',
-        '         <V n="apply_new_value" t="start_video">',
-        '            <U n="start_video">',
-        '               <L n="clip_list">',
-        '                  <T n="start_video">376840D7:00000000:' + hAVI + '</T></L></U></V></V>',
-        '',
-        '      <V n="autonomy_modifiers" t="apply_new_value">',
-        '         <V n="apply_new_value" t="apply_statistic_modifiers">',
-        '            <U n="apply_statistic_modifiers">',
-        '               <U n="periodic_statistic_change">',
-        '                  <T n="interval">60</T>',
-        '                  <L n="operations">',
-        '                     <U><T n="amount">-1</T><T n="stat">16633</T></U></L></U></U></V></V>',
-        '',
-        '      <V n="broadcaster" t="apply_new_value">',
-        '         <V n="apply_new_value" t="start_broadcaster">',
-        '            <U n="start_broadcaster">',
-        '               <L n="broadcaster_types">',
-        '                  <U><T n="item">74334</T></U></L></U></V></V></U>',
-        '',
-        '   <L n="buff_weight_multipliers">',
-        '      <U><T n="key">34527</T><T n="value">1</T></U>',
-        '      <U><T n="key">34526</T><T n="value">1</T></U>',
-        '      <U><T n="key">34525</T><T n="value">1</T></U>',
-        '      <U><T n="key">34524</T><T n="value">1</T></U>',
-        '      <U><T n="key">34523</T><T n="value">0</T></U></L>',
-        '',
-        '   <V n="value" t="integral"><T n="integral">1</T></V></I>',
-    ], '.\\OUT\\' + fnCE);
-
-    const xmlBlock = buildXmlWW() + '\r\n' + buildXmlIA() + '\r\n' + buildXmlEX() + '\r\n' + buildXmlCE();
-
-    return `@echo off\r\nsetlocal enabledelayedexpansion\r\ncd /d "%~dp0"\r\n\r\n:: VP6_SIMS4_WW.bat - WickedWhims Video Toolkit\r\n:: ${res} @ ${fps}fps | ${rateParam}\r\n:: Outputs -^> OUT\\\r\n\r\necho.\r\necho ============================================================\r\necho  VP6_SIMS4_WW  ${res} @ ${fps}fps  ${rateParam}\r\necho ============================================================\r\necho.\r\n\r\n:: Create directories\r\nif not exist ".\\TMP"            mkdir "TMP"\r\nif not exist ".\\TMP\\Y4M"       mkdir "TMP\\Y4M"\r\nif not exist ".\\TMP\\WAV"       mkdir "TMP\\WAV"\r\nif not exist ".\\TMP\\FINAL"     mkdir "TMP\\FINAL"\r\nif not exist ".\\OUT"             mkdir "OUT"\r\nif not exist ".\\ICO"             mkdir "ICO"\r\n\r\n:: ============================================================\r\n:: ENCODE: skips if .avi already exists in OUT\\\r\n:: ============================================================\r\n:: Collect MP4 filenames first (safe - no goto inside loop)\r\nfor %%f in (${inf}\\*.mp4) do (\r\n    set "filename=%%~nf"\r\n    set "mp4file=%%f"\r\n)\r\n:: Now check outside the loop (goto is safe here)\r\nif not defined filename goto :post_encode\r\nif exist "OUT\\!filename!.avi" (\r\n    echo   SKIP: !filename!.avi already in OUT\\ - skipping encode\r\n    goto :post_encode\r\n)\r\n:: Encode\r\necho Encoding: !filename!\r\nmkdir "TMP\\FINAL\\!filename!" 2>nul\r\necho   [1/5] Y4M...\r\ntools\\FFMPEG\\ffmpeg -hide_banner -loglevel warning -y -i "!mp4file!" -vf "scale=${scaleRes}" -r ${fps} -pix_fmt yuv420p -f yuv4mpegpipe ".\\TMP\\Y4M\\!filename!.Y4M"\r\nif errorlevel 1 (echo FAILED step 1 & exit /b 1)\r\necho   [2/5] WAV...\r\ntools\\FFMPEG\\ffmpeg -hide_banner -loglevel warning -y -i "!mp4file!" -acodec pcm_s16le -ar ${asr} -ac 2 ".\\TMP\\WAV\\!filename!.WAV"\r\nif errorlevel 1 (echo FAILED step 2 & exit /b 1)\r\necho   [3/5] EA audio stream...\r\ntools\\sx\\sx -sndstream -eaxa_blk -fps${fps} "TMP\\WAV\\!filename!.WAV" -= ".\\TMP\\FINAL\\!filename!\\!filename!.asf"\r\nif errorlevel 1 (echo FAILED step 3 & exit /b 1)\r\necho   [4/5] VP6 encode...\r\ntools\\VP6\\nihav-encoder --input "TMP\\Y4M\\!filename!.Y4M" --output ".\\TMP\\FINAL\\!filename!\\!filename!.VP6" --output-format ea --ostream0 timebase=1/${fps},encoder=vp6,version=vp61,${rateParam}\r\nif not exist ".\\TMP\\FINAL\\!filename!\\!filename!.VP6" (echo FAILED step 4 & exit /b 1)\r\necho   [5/5] QuickBMS mux...\r\ntools\\quickbms\\quickbms.exe -o tools\\quickbms\\eavp6_muxer.bms ".\\TMP\\FINAL\\!filename!" ".\\OUT"\r\nif errorlevel 1 (echo FAILED step 5 & exit /b 1)\r\n:: Rename .vp6 -^> S4PE-named AVI\r\nfor %%g in (OUT\\*.vp6 OUT\\*.ASF.vp6) do (\r\n    ren "%%g" "${fnAVI}"\r\n)\r\necho   Done: ${fnAVI}\r\n:post_encode\r\n\r\necho.\r\necho Cleaning up TMP...\r\nif exist "TMP" rmdir /s /q TMP\r\n\r\n:: ============================================================\r\n:: Get VP6 Instance ID from user\r\n:: ============================================================\r\necho.\r\necho ============================================================\r\necho  STEP: Import the .avi into S4PE\r\necho  - Open S4PE (no .package needed)\r\necho  - Import OUT\\${fnAVI}\r\necho    Type: 376840D7   Group: 00000000\r\necho  - Instance ID pre-computed: ${hAVI}\r\necho  (filename already contains the ID)\r\nset INST_ID=${hAVI}\r\necho Using pre-computed Instance ID: ${hAVI}\r\necho.\r\n:: ============================================================\r\n:: XML tuning files -^> OUT\\\r\n:: ============================================================\r\necho.\r\necho Writing XML files to OUT\\...\r\n${xmlBlock}\r\necho   ${fnWW}\r\necho   ${fnCE}\r\necho   ${fnIA}\r\necho   ${fnEX}\r\necho.\r\n\r\n:: ============================================================\r\n:: ICO PNG -> DDS\r\n:: ============================================================\r\nif not exist "tools\\texconv\\texconv.exe" (\r\n    echo Skipping DDS - texconv not found\r\n) else if not exist "ICO\\*.png" (\r\n    echo No PNGs in ICO\\ - skipping DDS\r\n) else (\r\n    echo Converting ICOs to DDS...\r\n    for %%f in (ICO\\*.png) do (\r\n        echo   texconv: %%~nf\r\n        tools\\texconv\\texconv.exe -f DXT5 -y -o ".\\\\OUT" "%%f"\r\n        if errorlevel 1 (echo   FAILED: %%~nf) else (\r\n            ren ".\\\\OUT\\\\%%~nf.DDS" "${fnIMG}"\r\n            echo   OK: ${fnIMG}\r\n        )\r\n    )\r\n)\r\n\r\necho.\r\n:skip_xml\r\necho ============================================================\r\necho  DONE!\r\necho  OUT\\ contains:\r\necho    .avi  -^> S4PE type 376840D7 group 00000000\r\necho    .DDS  -^> S4PE type 00B2D882 group 00000000\r\necho    .xml  -^> import by type (5B02819E x2 / E882D22F / 7DF2169C)\r\necho ============================================================\r\necho.\r\n\r\nendlocal\r\npause`;
+    return `@echo off\r\nsetlocal enabledelayedexpansion\r\ncd /d "%~dp0"\r\n\r\n:: VP6_SIMS4_WW.bat - WickedWhims Video Toolkit\r\n:: ${res} @ ${fps}fps | ${rateParam}\r\n:: Outputs -^> OUT\\\r\n\r\necho.\r\necho ============================================================\r\necho  VP6_SIMS4_WW  ${res} @ ${fps}fps  ${rateParam}\r\necho ============================================================\r\necho.\r\n\r\n:: Create directories\r\nif not exist ".\\TMP"            mkdir "TMP"\r\nif not exist ".\\TMP\\Y4M"       mkdir "TMP\\Y4M"\r\nif not exist ".\\TMP\\WAV"       mkdir "TMP\\WAV"\r\nif not exist ".\\TMP\\FINAL"     mkdir "TMP\\FINAL"\r\nif not exist ".\\OUT"             mkdir "OUT"\r\nif not exist ".\\ICO"             mkdir "ICO"\r\n\r\n:: ============================================================\r\n:: ENCODE: skips if .avi already exists in OUT\\\r\n:: ============================================================\r\n:: Collect MP4 filenames first (safe - no goto inside loop)\r\nfor %%f in (${inf}\\*.mp4) do (\r\n    set "filename=%%~nf"\r\n    set "mp4file=%%f"\r\n)\r\n:: Now check outside the loop (goto is safe here)\r\nif not defined filename goto :post_encode\r\nif exist "OUT\\!filename!.avi" (\r\n    echo   SKIP: !filename!.avi already in OUT\\ - skipping encode\r\n    goto :post_encode\r\n)\r\n:: Encode\r\necho Encoding: !filename!\r\nmkdir "TMP\\FINAL\\!filename!" 2>nul\r\necho   [1/5] Y4M...\r\ntools\\FFMPEG\\ffmpeg -hide_banner -loglevel warning -y -i "!mp4file!" -vf "scale=${scaleRes}" -r ${fps} -pix_fmt yuv420p -f yuv4mpegpipe ".\\TMP\\Y4M\\!filename!.Y4M"\r\nif errorlevel 1 (echo FAILED step 1 & exit /b 1)\r\necho   [2/5] WAV...\r\ntools\\FFMPEG\\ffmpeg -hide_banner -loglevel warning -y -i "!mp4file!" -acodec pcm_s16le -ar ${asr} -ac 2 ".\\TMP\\WAV\\!filename!.WAV"\r\nif errorlevel 1 (echo FAILED step 2 & exit /b 1)\r\necho   [3/5] EA audio stream...\r\ntools\\sx\\sx -sndstream -eaxa_blk -fps${fps} "TMP\\WAV\\!filename!.WAV" -= ".\\TMP\\FINAL\\!filename!\\!filename!.asf"\r\nif errorlevel 1 (echo FAILED step 3 & exit /b 1)\r\necho   [4/5] VP6 encode...\r\ntools\\VP6\\nihav-encoder --input "TMP\\Y4M\\!filename!.Y4M" --output ".\\TMP\\FINAL\\!filename!\\!filename!.VP6" --output-format ea --ostream0 timebase=1/${fps},encoder=vp6,version=vp61,${rateParam}\r\nif not exist ".\\TMP\\FINAL\\!filename!\\!filename!.VP6" (echo FAILED step 4 & exit /b 1)\r\necho   [5/5] QuickBMS mux...\r\ntools\\quickbms\\quickbms.exe -o tools\\quickbms\\eavp6_muxer.bms ".\\TMP\\FINAL\\!filename!" ".\\OUT"\r\nif errorlevel 1 (echo FAILED step 5 & exit /b 1)\r\n:: Rename .vp6 -^> S4PE-named AVI\r\nfor %%g in (OUT\\*.vp6 OUT\\*.ASF.vp6) do (\r\n    ren "%%g" "${fnAVI}"\r\n)\r\necho   Done: ${fnAVI}\r\n:post_encode\r\n\r\necho.\r\necho Cleaning up TMP...\r\nif exist "TMP" rmdir /s /q TMP\r\n\r\n:: ============================================================\r\n:: Get VP6 Instance ID from user\r\n:: ============================================================\r\necho.\r\necho ============================================================\r\necho  STEP: Import the .avi into S4PE\r\necho  - Open S4PE (no .package needed)\r\necho  - Import OUT\\${fnAVI}\r\necho    Type: 376840D7   Group: 00000000\r\necho  - Instance ID pre-computed: ${hAVI}\r\necho  (filename already contains the ID)\r\nset INST_ID=${hAVI}\r\necho Using pre-computed Instance ID: ${hAVI}\r\necho.\r\n:: ============================================================\r\n:: XML tuning files -^> OUT\\\r\n:: ============================================================\r\necho.\r\necho Writing XML files to OUT\\...\r\n${xmlBlock}\r\necho   ${fnWW}\r\necho.\r\n\r\n:: ============================================================\r\n:: ICO PNG -> DDS\r\n:: ============================================================\r\nif not exist "tools\\texconv\\texconv.exe" (\r\n    echo Skipping DDS - texconv not found\r\n) else if not exist "ICO\\*.png" (\r\n    echo No PNGs in ICO\\ - skipping DDS\r\n) else (\r\n    echo Converting ICOs to DDS...\r\n    for %%f in (ICO\\*.png) do (\r\n        echo   texconv: %%~nf\r\n        tools\\texconv\\texconv.exe -f DXT5 -y -o ".\\\\OUT" "%%f"\r\n        if errorlevel 1 (echo   FAILED: %%~nf) else (\r\n            ren ".\\\\OUT\\\\%%~nf.DDS" "${fnIMG}"\r\n            echo   OK: ${fnIMG}\r\n        )\r\n    )\r\n)\r\n\r\necho.\r\n:skip_xml\r\necho ============================================================\r\necho  DONE!\r\necho  OUT\\ contains:\r\necho    .avi  -^> S4PE type 376840D7 group 00000000\r\necho    .DDS  -^> S4PE type 00B2D882 group 00000000\r\necho    .xml  -^> import by type 5B02819E group 00000000\r\necho ============================================================\r\necho.\r\n\r\nendlocal\r\npause`;
 }
 
 function buildBat() {
@@ -659,7 +510,6 @@ function saveState() {
             if (el) d[id] = el.value;
         });
         d._orients = [...document.querySelectorAll('.orient-opt.on')].map(e => e.dataset.val);
-        d._tags = [...document.querySelectorAll('#tag-wrap .chip')].map(c => c.dataset.val);
         ['th-show-title', 'th-show-author', 'th-show-wm'].forEach(id => {
             const el = document.getElementById(id);
             if (el) d[id] = el.checked;
@@ -686,7 +536,6 @@ function loadState() {
         document.querySelectorAll('.orient-opt').forEach(el => {
             el.classList.toggle('on', (d._orients || []).includes(el.dataset.val));
         });
-        (d._tags || []).forEach(v => addTag(v));
     } catch (e) {}
 }
 SAVE_IDS.forEach(id => {
