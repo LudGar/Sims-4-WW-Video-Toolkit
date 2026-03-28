@@ -170,7 +170,7 @@ function generateBat() {
     const gTitle = _v('vid-title');
     const gAuthor = _v('vid-author');
     const gDesc = _v('vid-desc');
-    const gIcon = _v('vid-icon') || '2F7D0004:00000000:D19DE7E9C0FA296B';
+    const gIcon = '00B2D882:00000000:' + hAVI;
 
     const gFilename = _v('vid-filename');
     const gPrefix = gAuthor.replace(/\s+/g, '');
@@ -205,7 +205,7 @@ function generateBat() {
     // echo-redirect XML builder (cmd.exe safe, no PowerShell needed)
     const xmlToBat = (lines, outPath) => {
         const esc = s => s.replace(/\^/g, '^^').replace(/</g, '^<').replace(/>/g, '^>').replace(/&/g, '^&').replace(/\|/g, '^|');
-        const echoes = lines.map(l => 'echo ' + (l.trim() ? esc(l) : '.'));
+        const echoes = lines.map(l => l.trim() ? 'echo ' + esc(l) : 'echo.');
         return '(\r\n' + echoes.join('\r\n') + '\r\n) > "' + outPath + '"';
     };
 
@@ -603,7 +603,7 @@ document.getElementById('th-bg').addEventListener('change', function() {
 
 // ── LOCALSTORAGE ──
 const LS_KEY = 'ww_toolkit_v2';
-const SAVE_IDS = ['vid-filename', 'vid-title', 'vid-author', 'vid-desc', 'vid-icon', 'dur-min', 'dur-sec', 'b-res', 'b-fps', 'b-quant', 'b-cbr', 'b-ratemode', 'b-asr', 'b-cres',
+const SAVE_IDS = ['vid-filename', 'vid-title', 'vid-author', 'vid-desc', 'dur-min', 'dur-sec', 'b-res', 'b-fps', 'b-quant', 'b-cbr', 'b-ratemode', 'b-asr', 'b-cres',
     'th-style', 'th-size', 'th-opacity'
 ];
 
