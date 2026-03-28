@@ -75,6 +75,7 @@
                 </div>
             </div>
         </div>
+        </div>
 
         <div class="three-col">
 
@@ -120,10 +121,10 @@
                 </div>
             </div>
 
-            <!-- STEP 3: VIDEO DETAILS -->
+            <!-- STEP 2: VIDEO DETAILS -->
             <div class="section">
                 <div class="sh">
-                    <div class="snum">3</div>
+                    <div class="snum">2</div>
                     <div class="stitle">.package Details</div>
                 </div>
                 <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Fill in the video filename (paste your .mp4 name without extension), display title, author and description. The bat and XML are generated from this info.</div>
@@ -140,10 +141,10 @@
                 </div>
             </div>
 
-            <!-- STEP 4: ORIENTATION & DURATION -->
+            <!-- STEP 3: ORIENTATION & DURATION -->
             <div class="section">
                 <div class="sh">
-                    <div class="snum">4</div>
+                    <div class="snum">3</div>
                     <div class="stitle">Orientation &amp; Duration</div>
                 </div>
                 <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Add tags that describe the video content and set the exact duration in minutes and seconds.</div>
@@ -176,10 +177,10 @@
                 </div>
             </div>
 
-            <!-- STEP 5: ENCODE SETTINGS -->
+            <!-- STEP 4: ENCODE SETTINGS -->
             <div class="section">
                 <div class="sh">
-                    <div class="snum">5</div>
+                    <div class="snum">4</div>
                     <div class="stitle">Encode Video</div>
                 </div>
                 <div style="padding:6px 14px 0;font-size:11px;color:var(--sub);border-top:1px solid var(--border)">Configure encoding settings, then download the bat. Run it from your COMPILER folder — it encodes the video, writes the XML files, and converts the thumbnail.</div>
@@ -262,22 +263,21 @@
                     <button class="btn-sm p" style="width:100%;padding:10px;font-size:13px;font-weight:800;margin-top:8px" onclick="downloadBat()">⬇ Download VP6_SIMS4_WW.bat</button>
                 </div>
             </div>
+            <!-- FILE NAMES PANEL -->
+            <div class="section">
+                <div class="sh">
+                    <div class="snum b">📄</div>
+                    <div class="stitle">Output Filenames — Import into S4PE in this order</div>
+                </div>
+                <div class="sbody" style="gap:6px">
+                    <div class="fn-prev" style="border-color:var(--blue)"><span style="color:var(--blue)">🎬</span> <span class="fns" style="color:var(--blue)">S4_376840D7_00000000_</span><span class="fnd" id="fn-avi" style="color:var(--blue)">????????????????</span><span class="fns" style="color:var(--blue)">____AVI.avi</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 376840D7 · video resource</span></div>
+                    <div class="fn-prev" style="border-color:#30c8b0"><span style="color:#30c8b0">🖼</span> <span class="fns" style="color:#30c8b0">S4_00B2D882_00000000_</span><span class="fnd" id="fn-img" style="color:#30c8b0">????????????????</span><span class="fns" style="color:#30c8b0">____IMG.dds</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 00B2D882 · icon image</span></div>
+                    <div class="fn-prev">🟠 <span class="fns">S4_5B02819E_00000000_</span><span class="fnd" id="fn-ww">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 5B02819E · WW Channel</span></div>
+                    <div class="fn-prev">🟢 <span class="fns">S4_E882D22F_00000000_</span><span class="fnd" id="fn-ia">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type E882D22F · Interaction</span></div>
+                    <div class="fn-prev">🔴 <span class="fns">S4_7DF2169C_00000000_</span><span class="fnd" id="fn-ex">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 7DF2169C · Exit Condition</span></div>
+                </div>
+            </div>
         </div><!-- /three-col -->
-
-        <!-- FILE NAMES PANEL -->
-        <div class="section" style="margin-top:14px">
-            <div class="sh">
-                <div class="snum b">📄</div>
-                <div class="stitle">Output Filenames — Import into S4PE in this order</div>
-            </div>
-            <div class="sbody" style="gap:6px">
-                <div class="fn-prev" style="border-color:var(--blue)"><span style="color:var(--blue)">🎬</span> <span class="fns" style="color:var(--blue)">S4_376840D7_00000000_</span><span class="fnd" id="fn-avi" style="color:var(--blue)">????????????????</span><span class="fns" style="color:var(--blue)">____AVI.avi</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 376840D7 · video resource</span></div>
-                <div class="fn-prev" style="border-color:#30c8b0"><span style="color:#30c8b0">🖼</span> <span class="fns" style="color:#30c8b0">S4_00B2D882_00000000_</span><span class="fnd" id="fn-img" style="color:#30c8b0">????????????????</span><span class="fns" style="color:#30c8b0">____IMG.dds</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 00B2D882 · icon image</span></div>
-                <div class="fn-prev">🟠 <span class="fns">S4_5B02819E_00000000_</span><span class="fnd" id="fn-ww">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 5B02819E · WW Channel</span></div>
-                <div class="fn-prev">🟢 <span class="fns">S4_E882D22F_00000000_</span><span class="fnd" id="fn-ia">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type E882D22F · Interaction</span></div>
-                <div class="fn-prev">🔴 <span class="fns">S4_7DF2169C_00000000_</span><span class="fnd" id="fn-ex">????????????????</span><span class="fns">____XML.xml</span> <span class="fns" style="font-size:10px;color:var(--sub)">Type 7DF2169C · Exit Condition</span></div>
-            </div>
-        </div>
 
         <script src="./app.js"></script>
 </body>
