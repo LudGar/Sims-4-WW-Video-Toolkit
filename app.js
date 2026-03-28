@@ -170,7 +170,6 @@ function generateBat() {
     const gTitle = _v('vid-title');
     const gAuthor = _v('vid-author');
     const gDesc = _v('vid-desc');
-    const gIcon = '00B2D882:00000000:' + hAVI;
 
     const gFilename = _v('vid-filename');
     const gPrefix = gAuthor.replace(/\s+/g, '');
@@ -196,6 +195,7 @@ function generateBat() {
     const hAVI = gAVI.toString(16).toUpperCase().padStart(16, '0');
     const fnAVI = 'S4_376840D7_00000000_' + hAVI + '____AVI.avi';
     const fnIMG = 'S4_00B2D882_00000000_' + hAVI + '____IMG.dds';
+    const gIcon = '00B2D882:00000000:' + hAVI;
 
     const ex = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const nWW = ex(gBase + '_WW.OBJ.TUNING');
