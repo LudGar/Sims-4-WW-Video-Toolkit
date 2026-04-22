@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WW Video Toolkit</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- ── Top bar ─────────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+    </svg>
+    WW Video Toolkit
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-outline" id="btn-scan">Scan Folder</button>
+    <button class="btn btn-primary" id="btn-add">+ Add Videos</button>
+    <button class="btn btn-outline btn-icon" id="btn-settings" title="Global settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ── Sidebar ─────────────────────────────────────────────────────────────── -->
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <label class="sidebar-label">Search</label>
+      <input class="input" type="text" id="filter-search" placeholder="Title or author…">
+    </div>
+
+    <div class="sidebar-section">
+      <label class="sidebar-label">Status</label>
+      <div class="filter-group" id="filter-status">
+        <button class="filter-btn active" data-val="">All</button>
+        <button class="filter-btn" data-val="pending">Pending</button>
+        <button class="filter-btn" data-val="queued">Queued</button>
+        <button class="filter-btn" data-val="encoding">Encoding</button>
+        <button class="filter-btn" data-val="done">Done</button>
+        <button class="filter-btn" data-val="error">Error</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <label class="sidebar-label">Orientation</label>
+      <div class="filter-group" id="filter-orient">
+        <button class="filter-btn active" data-val="">All</button>
+        <button class="filter-btn" data-val="HETEROSEXUAL">Hetero</button>
+        <button class="filter-btn" data-val="HOMOSEXUAL_MALE">Gay M</button>
+        <button class="filter-btn" data-val="HOMOSEXUAL_FEMALE">Gay F</button>
+        <button class="filter-btn" data-val="BISEXUAL">Bi</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <label class="sidebar-label">Batch actions</label>
+      <button class="btn btn-outline btn-full" id="btn-select-all">Select All</button>
+      <button class="btn btn-accent btn-full" id="btn-encode-selected" style="margin-top:6px" disabled>
+        Encode Selected (<span id="sel-count">0</span>)
+      </button>
+      <button class="btn btn-danger btn-full" id="btn-delete-selected" style="margin-top:6px" disabled>
+        Delete Selected
+      </button>
+    </div>
+
+    <div class="sidebar-section stats" id="stats-panel">
+      <div class="stat-row"><span>Total</span><span id="stat-total">—</span></div>
+      <div class="stat-row"><span>Done</span><span id="stat-done">—</span></div>
+      <div class="stat-row"><span>Pending</span><span id="stat-pending">—</span></div>
+    </div>
+  </aside>
+
+  <!-- ── Main gallery ─────────────────────────────────────────────────────── -->
+  <main class="gallery-wrap">
+    <!-- Drop zone overlay -->
+    <div class="drop-overlay" id="drop-overlay">
+      <div class="drop-inner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <span>Drop MP4 files to add</span>
+      </div>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <div class="gallery-empty" id="gallery-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+        </svg>
+        <p>No videos yet.<br>Drop MP4 files here or click <strong>+ Add Videos</strong>.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Hidden file input -->
+<input type="file" id="file-input" accept=".mp4" multiple style="display:none">
+
+<!-- ── Scan folder modal ─────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="scan-modal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Scan Folder</h2>
+      <button class="modal-close" data-close="scan-modal">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="field-label">Folder path</label>
+      <input class="input" type="text" id="scan-path" placeholder="C:\Videos\WW">
+      <p class="hint">All .mp4 files in this folder will be imported (existing entries skipped).</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="scan-modal">Cancel</button>
+      <button class="btn btn-primary" id="btn-scan-confirm">Scan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Edit / encode modal ───────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="edit-modal" style="display:none">
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2 id="edit-modal-title">Edit Video</h2>
+      <button class="modal-close" data-close="edit-modal">✕</button>
+    </div>
+    <div class="modal-body modal-body-cols">
+
+      <!-- Left: source thumb + status + icon generator -->
+      <div class="modal-thumb-col">
+
+        <!-- Source video preview frame -->
+        <div class="tgen-label">Source preview</div>
+        <img class="modal-thumb" id="edit-thumb" src="" alt="">
+        <div class="modal-status-badge" id="edit-status-badge"></div>
+        <div class="modal-progress" id="edit-progress-wrap" style="display:none">
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="edit-progress-bar"></div>
+          </div>
+          <div class="progress-label" id="edit-progress-label"></div>
+        </div>
+        <div class="modal-error" id="edit-error-box" style="display:none"></div>
+        <button class="btn btn-outline btn-full" id="edit-openfolder-btn" style="margin-top:10px">
+          📂 Open Output
+        </button>
+        <button class="btn btn-outline btn-full" id="edit-openmod-btn" style="margin-top:6px;display:none">
+          🎮 Open Mod Folder
+        </button>
+
+        <!-- WW Icon Generator -->
+        <div class="tgen-divider">
+          <span>WW Icon Generator</span>
+        </div>
+
+        <div class="tgen-canvas-wrap">
+          <canvas id="thumb-canvas" width="128" height="128"></canvas>
+          <div class="tgen-canvas-badge">DDS icon</div>
+        </div>
+
+        <div class="tgen-controls">
+          <div class="tgen-row">
+            <label class="tgen-lbl">Style</label>
+            <select class="input input-sm" id="th-style">
+              <option value="dark">Dark Gold</option>
+              <option value="red">Dark Red</option>
+              <option value="purple" selected>Dark Purple</option>
+              <option value="teal">Dark Teal</option>
+              <option value="minimal">Minimal</option>
+            </select>
+          </div>
+          <div class="tgen-row">
+            <label class="tgen-lbl">Size</label>
+            <select class="input input-sm" id="th-size">
+              <option value="128" selected>128 px</option>
+              <option value="256">256 px</option>
+              <option value="512">512 px</option>
+            </select>
+          </div>
+          <div class="tgen-row">
+            <label class="tgen-lbl">Opacity <span id="th-opacity-val" style="color:var(--text2)">60%</span></label>
+            <input type="range" class="input input-sm" id="th-opacity" min="0" max="100" value="60">
+          </div>
+          <div class="tgen-checks">
+            <label class="tgen-check"><input type="checkbox" id="th-show-wm" checked> WW logo</label>
+            <label class="tgen-check"><input type="checkbox" id="th-show-title" checked> Title</label>
+            <label class="tgen-check"><input type="checkbox" id="th-show-author" checked> Author</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: form fields -->
+      <div class="modal-form-col">
+        <input type="hidden" id="edit-id">
+
+        <div class="field-group">
+          <label class="field-label">Hash name <span class="hint-inline">— used in VIDEO_<em>name</em> &amp; S4PE filenames</span></label>
+          <input class="input" id="edit-hash-name" type="text" placeholder="e.g. rule34xxx3279120">
+        </div>
+        <div class="field-group">
+          <label class="field-label">In-game display name <span class="hint-inline">— video_raw_display_name in XML</span></label>
+          <input class="input" id="edit-display-name" type="text" placeholder="e.g. 3279120">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Icon label <span class="hint-inline">— shown on the thumbnail canvas</span></label>
+          <input class="input" id="edit-title" type="text" placeholder="e.g. My Animation Title">
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Author</label>
+            <input class="input" id="edit-author" type="text" placeholder="YourName">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Duration (sec)</label>
+            <input class="input" id="edit-duration" type="number" min="1" placeholder="auto">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Description (optional)</label>
+          <textarea class="input" id="edit-desc" rows="2" placeholder="Short description…"></textarea>
+        </div>
+
+        <hr class="divider">
+
+        <div class="field-group">
+          <label class="field-label">Orientations</label>
+          <div class="orient-chips" id="edit-orients">
+            <button class="chip" data-val="HETEROSEXUAL">Heterosexual</button>
+            <button class="chip" data-val="HOMOSEXUAL_MALE">Gay Male</button>
+            <button class="chip" data-val="HOMOSEXUAL_FEMALE">Gay Female</button>
+            <button class="chip" data-val="BISEXUAL">Bisexual</button>
+          </div>
+        </div>
+
+        <!-- Output filenames + last-saved -->
+        <div class="filenames-section">
+          <div class="filenames-header">
+            <span>Output filenames — import into S4PE in this order</span>
+          </div>
+          <div class="filename-row" id="fn-row-avi">
+            <span class="fn-type fn-avi">AVI</span>
+            <span class="fn-name" id="fn-avi"></span>
+            <span class="fn-saved" id="fn-avi-saved"></span>
+          </div>
+          <div class="filename-row" id="fn-row-dds">
+            <span class="fn-type fn-dds">DDS</span>
+            <span class="fn-name" id="fn-dds"></span>
+            <span class="fn-saved" id="fn-dds-saved"></span>
+          </div>
+          <div class="filename-row" id="fn-row-xml">
+            <span class="fn-type fn-xml">XML</span>
+            <span class="fn-name" id="fn-xml"></span>
+            <span class="fn-saved" id="fn-xml-saved"></span>
+          </div>
+          <div class="filename-row" id="fn-row-pkg">
+            <span class="fn-type fn-pkg">PKG</span>
+            <span class="fn-name" id="fn-pkg">—</span>
+            <span class="fn-saved" id="fn-pkg-saved"></span>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Resolution</label>
+            <select class="input" id="edit-res">
+              <option value="480x272">480×272 (SD)</option>
+              <option value="512x288">512×288</option>
+              <option value="640x272">640×272 (Cinematic)</option>
+              <option value="1024x576">1024×576 (HD)</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Frame rate</label>
+            <select class="input" id="edit-fps">
+              <option value="15">15 fps</option>
+              <option value="24">24 fps</option>
+              <option value="30" selected>30 fps</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Audio rate</label>
+            <select class="input" id="edit-asr">
+              <option value="44100" selected>44100 Hz</option>
+              <option value="22050">22050 Hz</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Rate mode</label>
+            <select class="input" id="edit-ratemode">
+              <option value="cqp" selected>CQP (quality)</option>
+              <option value="cbr">CBR (bitrate)</option>
+            </select>
+          </div>
+          <div class="field-group" id="edit-quant-wrap">
+            <label class="field-label">Quality (quant)</label>
+            <input class="input" id="edit-quant" type="range" min="1" max="63" value="18">
+            <span class="range-hint" id="edit-quant-hint">18</span>
+          </div>
+          <div class="field-group" id="edit-cbr-wrap" style="display:none">
+            <label class="field-label">Bitrate (kbps)</label>
+            <input class="input" id="edit-cbr" type="number" min="100" max="5000" value="500">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer modal-footer-actions">
+      <button class="btn btn-xml"  id="edit-save-xml-btn"  title="Write XML tuning file from current metadata">Save XML</button>
+      <button class="btn btn-dds"  id="edit-save-dds-btn"  title="Convert thumbnail to DDS via texconv">Save DDS</button>
+      <button class="btn btn-avi"  id="edit-encode-btn"    title="Run full VP6 encode pipeline">Encode AVI</button>
+      <button class="btn btn-pkg"  id="edit-rebuild-btn"   title="Assemble .package from existing AVI + DDS + XML">Save .package</button>
+      <button class="btn btn-outline" id="edit-debug-btn"  title="Build stripped test packages to diagnose game crash" style="font-size:11px;opacity:.7">🔧 Debug</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Settings modal ───────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="settings-modal" style="display:none">
+  <div class="modal modal-settings">
+    <div class="modal-header">
+      <h2>Global Default Settings</h2>
+      <button class="modal-close" data-close="settings-modal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:16px">
+        These defaults are applied to every newly imported video.
+        Use <strong>Apply to pending</strong> to push them onto videos not yet encoded.
+      </p>
+
+      <div class="settings-section-title">Metadata defaults</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Default author</label>
+          <input class="input" id="cfg-author" type="text" placeholder="YourName">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Default orientations</label>
+          <div class="orient-chips" id="cfg-orients">
+            <button class="chip" data-val="HETEROSEXUAL">Heterosexual</button>
+            <button class="chip" data-val="HOMOSEXUAL_MALE">Gay Male</button>
+            <button class="chip" data-val="HOMOSEXUAL_FEMALE">Gay Female</button>
+            <button class="chip" data-val="BISEXUAL">Bisexual</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section-title" style="margin-top:18px">Encode defaults</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Resolution</label>
+          <select class="input" id="cfg-res">
+            <option value="480x272">480×272 (SD)</option>
+            <option value="512x288">512×288</option>
+            <option value="640x272">640×272 (Cinematic)</option>
+            <option value="1024x576">1024×576 (HD)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Frame rate</label>
+          <select class="input" id="cfg-fps">
+            <option value="15">15 fps</option>
+            <option value="24">24 fps</option>
+            <option value="30">30 fps</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Audio rate</label>
+          <select class="input" id="cfg-asr">
+            <option value="44100">44100 Hz</option>
+            <option value="22050">22050 Hz</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Rate mode</label>
+          <select class="input" id="cfg-ratemode">
+            <option value="cqp">CQP (quality)</option>
+            <option value="cbr">CBR (bitrate)</option>
+          </select>
+        </div>
+        <div class="field-group" id="cfg-quant-wrap">
+          <label class="field-label">Quality (quant) <span id="cfg-quant-hint" class="range-hint">18</span></label>
+          <input class="input" id="cfg-quant" type="range" min="1" max="63" value="18">
+        </div>
+        <div class="field-group" id="cfg-cbr-wrap" style="display:none">
+          <label class="field-label">Bitrate (kbps)</label>
+          <input class="input" id="cfg-cbr" type="number" min="100" max="5000" value="500">
+        </div>
+      </div>
+    </div>
+
+      <div class="settings-section-title" style="margin-top:18px">Package output</div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Filename prefix</label>
+          <input class="input" id="cfg-pkg-prefix" type="text" placeholder="ldgr-WW">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Naming</label>
+          <select class="input" id="cfg-pkg-naming">
+            <option value="title">Prefix + video title</option>
+            <option value="counter">Prefix + counter (001, 002…)</option>
+          </select>
+        </div>
+        <div class="field-group" id="cfg-counter-wrap" style="display:none">
+          <label class="field-label">Next counter</label>
+          <input class="input" id="cfg-pkg-counter" type="number" min="1" value="1">
+        </div>
+      </div>
+      <div class="field-group" style="margin-top:8px">
+        <label class="field-label">Output folder <span class="hint">leave blank → internal packages/ dir</span></label>
+        <input class="input" id="cfg-pkg-dir" type="text"
+               placeholder="C:\Users\You\Documents\Electronic Arts\The Sims 4\Mods">
+      </div>
+      <div class="pkg-preview-row" id="cfg-pkg-preview-row">
+        <span class="pkg-preview-label">Example filename:</span>
+        <code class="pkg-preview-name" id="cfg-pkg-preview">ldgr-WW-001.package</code>
+      </div>
+
+      <div class="settings-section-title" style="margin-top:24px">Tool paths</div>
+      <p class="hint" style="margin-bottom:12px">Leave blank to use the default <code>Tools\</code> folder paths. Paste an absolute path to override.</p>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">ffmpeg.exe</label>
+          <input class="input input-path" id="cfg-path-ffmpeg" type="text" placeholder="Tools\FFMPEG\ffmpeg.exe">
+        </div>
+        <div class="field-group">
+          <label class="field-label">nihav-encoder.exe</label>
+          <input class="input input-path" id="cfg-path-nihav" type="text" placeholder="Tools\VP6\nihav-encoder.exe">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">sx.exe</label>
+          <input class="input input-path" id="cfg-path-sx" type="text" placeholder="Tools\SX\sx.exe">
+        </div>
+        <div class="field-group">
+          <label class="field-label">texconv.exe</label>
+          <input class="input input-path" id="cfg-path-texconv" type="text" placeholder="Tools\texconv\texconv.exe">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">quickbms.exe</label>
+          <input class="input input-path" id="cfg-path-quickbms" type="text" placeholder="Tools\QuickBMS\quickbms.exe">
+        </div>
+        <div class="field-group">
+          <label class="field-label">eavp6_muxer.bms</label>
+          <input class="input input-path" id="cfg-path-bms" type="text" placeholder="Tools\QuickBMS\eavp6_muxer.bms">
+        </div>
+      </div>
+
+    <div class="modal-footer" style="justify-content:space-between">
+      <button class="btn btn-outline" id="cfg-apply-btn">Apply to all pending videos</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline" data-close="settings-modal">Cancel</button>
+        <button class="btn btn-primary" id="cfg-save-btn">Save defaults</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ─────────────────────────────────────────────────────────────── -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

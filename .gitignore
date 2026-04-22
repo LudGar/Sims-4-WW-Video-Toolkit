@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment
+webapp/.venv/
+.venv/
+venv/
+env/
+
+# App data (database, uploads, encoded files, generated output)
+webapp/data/
+
+# User video source files
+MP4/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
