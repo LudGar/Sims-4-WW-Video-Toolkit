@@ -6,7 +6,10 @@ import json
 import os
 import queue
 import re
+import shutil
 import sqlite3
+import subprocess
+import sys
 import threading
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
@@ -468,7 +471,6 @@ def api_status(vid_id):
 @app.route("/api/open-folder", methods=["POST"])
 def api_open_folder():
     """Open the video's output subfolder (or root output dir) in Windows Explorer."""
-    import subprocess
     vid_id = (request.get_json() or {}).get("id")
     if vid_id:
         v = db.session.get(Video, int(vid_id))
@@ -483,7 +485,6 @@ def api_open_folder():
 @app.route("/api/open-mod-folder", methods=["POST"])
 def api_open_mod_folder():
     """Open the configured Sims 4 Mods folder (pkg_output_dir) in Windows Explorer."""
-    import subprocess
     cfg     = load_settings()
     out_dir = cfg.get("pkg_output_dir", "").strip()
     if not out_dir:
@@ -492,6 +493,37 @@ def api_open_mod_folder():
         return jsonify({"error": f"Folder not found: {out_dir}"}), 400
     subprocess.Popen(["explorer", os.path.abspath(out_dir)])
     return jsonify({"ok": True, "path": out_dir})
+
+
+@app.route("/api/pick-files", methods=["POST"])
+def api_pick_files():
+    """
+    Open a native Windows file-picker dialog (multi-select, .mp4 filter)
+    and return the selected paths. Runs tkinter in a subprocess so the
+    Flask thread is not blocked by the GUI event loop.
+    """
+    _script = (
+        "import sys, tkinter as tk\n"
+        "from tkinter import filedialog\n"
+        "root = tk.Tk(); root.withdraw()\n"
+        "root.call('wm', 'attributes', '.', '-topmost', True)\n"
+        "paths = filedialog.askopenfilenames(\n"
+        "    title='Select MP4 files',\n"
+        "    filetypes=[('MP4 video', '*.mp4'), ('All files', '*.*')]\n"
+        ")\n"
+        "sys.stdout.write('\\n'.join(paths))\n"
+    )
+    try:
+        result = subprocess.run(
+            [sys.executable, "-c", _script],
+            capture_output=True, text=True, timeout=300,
+        )
+        paths = [p.strip() for p in result.stdout.splitlines() if p.strip()]
+        return jsonify({"paths": paths})
+    except subprocess.TimeoutExpired:
+        return jsonify({"paths": []})
+    except Exception as e:
+        return jsonify({"error": str(e), "paths": []}), 500
 
 
 @app.route("/api/videos/<int:vid_id>/thumbnail", methods=["POST"])
