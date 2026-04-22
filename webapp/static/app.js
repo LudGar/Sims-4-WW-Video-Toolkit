@@ -977,9 +977,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ── Add Videos → opens Scan Folder modal (no file copy) ──────────────────
+  // ── Add Videos → paste-paths modal ────────────────────────────────────────
   document.getElementById('btn-add').addEventListener('click', () => {
-    document.getElementById('scan-modal').style.display = 'flex';
+    document.getElementById('addpaths-input').value = '';
+    document.getElementById('addpaths-modal').style.display = 'flex';
+    setTimeout(() => document.getElementById('addpaths-input').focus(), 50);
+  });
+
+  async function runAddPaths() {
+    const raw = document.getElementById('addpaths-input').value;
+    const paths = raw.split(/[\r\n]+/)
+      .map(l => l.trim().replace(/^["']|["']$/g, ''))
+      .filter(l => l.toLowerCase().endsWith('.mp4') && l.length > 4);
+    closeModal('addpaths-modal');
+    await ingestPaths(paths);
+  }
+
+  document.getElementById('btn-addpaths-confirm').addEventListener('click', runAddPaths);
+  document.getElementById('addpaths-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) runAddPaths();
   });
 
   // ── Scan folder ────────────────────────────────────────────────────────────

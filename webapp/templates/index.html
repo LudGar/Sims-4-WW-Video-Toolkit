@@ -101,6 +101,27 @@
 </div>
 
 
+<!-- ── Add by paths modal ────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="addpaths-modal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Add Videos by Path</h2>
+      <button class="modal-close" data-close="addpaths-modal">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="field-label">File paths <span class="hint">one per line</span></label>
+      <textarea class="input input-path" id="addpaths-input" rows="6"
+        placeholder="C:\Videos\clip1.mp4&#10;C:\Videos\clip2.mp4"
+        style="resize:vertical;font-size:12px"></textarea>
+      <p class="hint" style="margin-top:8px">Tip: you can also paste paths anywhere on the page with <strong>Ctrl+V</strong>.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="addpaths-modal">Cancel</button>
+      <button class="btn btn-primary" id="btn-addpaths-confirm">Add</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Scan folder modal ─────────────────────────────────────────────────── -->
 <div class="modal-backdrop" id="scan-modal" style="display:none">
   <div class="modal">
