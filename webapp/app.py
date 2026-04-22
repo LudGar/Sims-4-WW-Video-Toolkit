@@ -26,6 +26,16 @@ SETTINGS_PATH = os.path.join(DATA_DIR, "settings.json")
 for _d in [DATA_DIR, UPLOAD_DIR, THUMB_DIR, OUT_DIR, PKG_DIR]:
     os.makedirs(_d, exist_ok=True)
 
+
+def _video_out_dir(video) -> str:
+    """Return (and create) a per-video subfolder under OUT_DIR."""
+    stem = video.hash_name or os.path.splitext(video.filename)[0]
+    safe = re.sub(r"[^\w\-]", "_", stem).strip("_") or "video"
+    d = os.path.join(OUT_DIR, safe)
+    os.makedirs(d, exist_ok=True)
+    return d
+
+
 # ── Default / persisted app settings ──────────────────────────────────────────
 _DEFAULT_SETTINGS = {
     "author":          "",
@@ -140,7 +150,7 @@ def _worker():
                 video = db.session.get(Video, vid_id)
                 if video:
                     pkg_dest = _make_pkg_dest(video)
-                    encode_video(video, OUT_DIR, pkg_dest, mode=mode)
+                    encode_video(video, _video_out_dir(video), pkg_dest, mode=mode)
         except Exception as e:
             with app.app_context():
                 video = db.session.get(Video, vid_id)
@@ -332,7 +342,7 @@ def api_scan():
 def api_save_xml(vid_id):
     """Regenerate and write the XML tuning file from current metadata."""
     v = db.get_or_404(Video, vid_id)
-    path, err = save_xml_only(v, OUT_DIR)
+    path, err = save_xml_only(v, _video_out_dir(v))
     if err:
         return jsonify({"error": err}), 500
     v.xml_path = path
@@ -344,7 +354,7 @@ def api_save_xml(vid_id):
 def api_save_dds(vid_id):
     """Convert current thumbnail to DDS via texconv."""
     v = db.get_or_404(Video, vid_id)
-    path, err = save_dds_only(v, OUT_DIR)
+    path, err = save_dds_only(v, _video_out_dir(v))
     if err:
         return jsonify({"error": err}), 500
     v.dds_path = path
@@ -391,7 +401,7 @@ def api_debug_package(vid_id):
     # Read XML from disk (or regenerate if not saved yet)
     from pipeline import save_xml_only as _sxo
     if not (v.xml_path and os.path.exists(v.xml_path)):
-        _sxo(v, OUT_DIR)
+        _sxo(v, _video_out_dir(v))
 
     if not (v.xml_path and os.path.exists(v.xml_path)):
         return jsonify({"error": "No XML found — run Save XML first"}), 400
@@ -415,7 +425,7 @@ def api_debug_package(vid_id):
 
     safe_stem = "".join(c for c in stem if c.isalnum() or c in "-_")[:32]
     out_name  = f"DEBUG_{safe_stem}_{variant}.package"
-    out_path  = os.path.join(OUT_DIR, out_name)
+    out_path  = os.path.join(_video_out_dir(v), out_name)
     with open(out_path, "wb") as f:
         f.write(build_package(resources))
 
@@ -469,11 +479,17 @@ def api_status(vid_id):
 
 @app.route("/api/open-folder", methods=["POST"])
 def api_open_folder():
-    """Open the internal output folder (webapp/data/output) in Windows Explorer."""
+    """Open the video's output subfolder (or root output dir) in Windows Explorer."""
     import subprocess
-    os.makedirs(OUT_DIR, exist_ok=True)
-    subprocess.Popen(["explorer", os.path.abspath(OUT_DIR)])
-    return jsonify({"ok": True, "path": OUT_DIR})
+    vid_id = (request.get_json() or {}).get("id")
+    if vid_id:
+        v = db.session.get(Video, int(vid_id))
+        target = _video_out_dir(v) if v else OUT_DIR
+    else:
+        target = OUT_DIR
+    os.makedirs(target, exist_ok=True)
+    subprocess.Popen(["explorer", os.path.abspath(target)])
+    return jsonify({"ok": True, "path": target})
 
 
 @app.route("/api/open-mod-folder", methods=["POST"])

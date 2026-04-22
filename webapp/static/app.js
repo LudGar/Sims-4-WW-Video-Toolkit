@@ -1016,7 +1016,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('edit-openfolder-btn')?.addEventListener('click', async () => {
     try {
-      await POST('/api/open-folder');   // opens webapp/data/output/ in Explorer
+      const id = parseInt(document.getElementById('edit-id')?.value) || null;
+      await POST('/api/open-folder', id ? { id } : {});
     } catch (e) {
       toast('Could not open folder: ' + e.message, 'error');
     }

@@ -39,8 +39,9 @@ GROUP_ID = 0x00000000
 
 # ── Tool paths ─────────────────────────────────────────────────────────────────
 
-def _repo_root() -> str:
-    return os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
+def _webapp_root() -> str:
+    """Root of the webapp/ directory — Tools/ now lives here."""
+    return os.path.dirname(os.path.abspath(__file__))
 
 
 def tools(name: str) -> str:
@@ -72,8 +73,8 @@ def tools(name: str) -> str:
                 return custom
         except Exception:
             pass
-    # Fall back to default Tools/ path relative to repo root
-    return os.path.join(_repo_root(), defaults[name])
+    # Fall back to default Tools/ path inside webapp/
+    return os.path.join(_webapp_root(), defaults[name])
 
 
 # ── Subprocess helper ──────────────────────────────────────────────────────────
