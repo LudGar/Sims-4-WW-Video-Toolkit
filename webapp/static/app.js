@@ -477,21 +477,18 @@ async function encodeVideo(id, mode = 'auto') {
 }
 
 // ── Upload ─────────────────────────────────────────────────────────────────────
-async function uploadFiles(files) {
-  const mp4s = [...files].filter(f => f.name.toLowerCase().endsWith('.mp4'));
-  if (!mp4s.length) { toast('No .mp4 files found', 'error'); return; }
-
-  const fd = new FormData();
-  mp4s.forEach(f => fd.append('files', f));
-
-  toast(`Uploading ${mp4s.length} file(s)…`, 'info');
+async function ingestPaths(paths) {
+  if (!paths.length) { toast('No .mp4 paths found', 'error'); return; }
   try {
-    const added = await fetch('/api/upload', { method: 'POST', body: fd }).then(r => r.json());
-    added.forEach(v => state.videos.unshift(v));
-    renderGallery();
-    toast(`Added ${added.length} video(s)`, 'success');
+    const res = await POST('/api/ingest-paths', { paths });
+    (res.videos || []).forEach(v => state.videos.unshift(v));
+    if (res.added) renderGallery();
+    const msg = res.added
+      ? `Added ${res.added} video${res.added !== 1 ? 's' : ''}${res.skipped ? ` (${res.skipped} already in library)` : ''}`
+      : `Already in library (${res.skipped} skipped)`;
+    toast(msg, res.added ? 'success' : 'info');
   } catch (e) {
-    toast('Upload failed: ' + e.message, 'error');
+    toast('Import failed: ' + e.message, 'error');
   }
 }
 
@@ -980,14 +977,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ── Add / upload ───────────────────────────────────────────────────────────
+  // ── Add Videos → opens Scan Folder modal (no file copy) ──────────────────
   document.getElementById('btn-add').addEventListener('click', () => {
-    document.getElementById('file-input').click();
-  });
-
-  document.getElementById('file-input').addEventListener('change', function() {
-    if (this.files.length) uploadFiles(this.files);
-    this.value = '';
+    document.getElementById('scan-modal').style.display = 'flex';
   });
 
   // ── Scan folder ────────────────────────────────────────────────────────────
@@ -1155,11 +1147,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('dragover', e => e.preventDefault());
 
-  document.addEventListener('drop', e => {
+  document.addEventListener('drop', async e => {
     e.preventDefault();
     dragCounter = 0;
     overlay.classList.remove('active');
-    if (e.dataTransfer.files.length) uploadFiles(e.dataTransfer.files);
+    // Extract file:// URIs from the drop (Windows Explorer → Chrome/Edge)
+    const uriList = e.dataTransfer.getData('text/uri-list') || '';
+    const paths = uriList.split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(l => l && !l.startsWith('#'))
+      .map(uri => uri.startsWith('file:///') ? decodeURIComponent(uri.slice(8)) : uri)
+      .filter(p => p.toLowerCase().endsWith('.mp4'));
+    if (paths.length) {
+      await ingestPaths(paths);
+    } else {
+      toast('Drag .mp4 files from Explorer, or paste paths with Ctrl+V', 'info');
+    }
   });
 
   // ── Modal close buttons ────────────────────────────────────────────────────

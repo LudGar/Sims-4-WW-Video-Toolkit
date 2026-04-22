@@ -17,13 +17,12 @@ from pipeline import (encode_video, extract_thumbnail, probe_duration,
 # ── Paths ──────────────────────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR  = os.path.join(BASE_DIR, "data")
-UPLOAD_DIR = os.path.join(DATA_DIR, "uploads")
 THUMB_DIR  = os.path.join(DATA_DIR, "thumbs")
 OUT_DIR    = os.path.join(DATA_DIR, "output")
 PKG_DIR    = os.path.join(DATA_DIR, "packages")
 SETTINGS_PATH = os.path.join(DATA_DIR, "settings.json")
 
-for _d in [DATA_DIR, UPLOAD_DIR, THUMB_DIR, OUT_DIR, PKG_DIR]:
+for _d in [DATA_DIR, THUMB_DIR, OUT_DIR, PKG_DIR]:
     os.makedirs(_d, exist_ok=True)
 
 
@@ -291,32 +290,21 @@ def api_update(vid_id):
 @app.route("/api/videos/<int:vid_id>", methods=["DELETE"])
 def api_delete(vid_id):
     v = db.get_or_404(Video, vid_id)
-    for path in [v.thumbnail_path, v.avi_path, v.dds_path, v.xml_path, v.package_path]:
-        if path and os.path.exists(path):
-            try:
-                os.remove(path)
-            except OSError:
-                pass
+    # Remove thumbnail (in data/thumbs/)
+    if v.thumbnail_path and os.path.exists(v.thumbnail_path):
+        try:
+            os.remove(v.thumbnail_path)
+        except OSError:
+            pass
+    # Remove the whole per-video output folder (AVI, DDS, XML, debug packages)
+    # source_path is intentionally NOT deleted — it's the user's original file
+    out_dir = _video_out_dir(v)
+    if os.path.isdir(out_dir):
+        shutil.rmtree(out_dir, ignore_errors=True)
     db.session.delete(v)
     db.session.commit()
     return jsonify({"ok": True})
 
-
-@app.route("/api/upload", methods=["POST"])
-def api_upload():
-    added = []
-    for f in request.files.getlist("files"):
-        if not f.filename.lower().endswith(".mp4"):
-            continue
-        stem = os.path.splitext(f.filename)[0]
-        dest = os.path.join(UPLOAD_DIR, f.filename)
-        n = 1
-        while os.path.exists(dest):
-            dest = os.path.join(UPLOAD_DIR, f"{stem}_{n}.mp4")
-            n += 1
-        f.save(dest)
-        added.append(_ingest(dest, os.path.basename(dest)).to_dict())
-    return jsonify(added)
 
 
 @app.route("/api/scan", methods=["POST"])
