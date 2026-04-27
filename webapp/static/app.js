@@ -787,6 +787,7 @@ async function openSettings() {
     document.getElementById('cfg-pkg-naming').value   = cfg.pkg_naming   || 'title';
     document.getElementById('cfg-pkg-counter').value  = cfg.pkg_counter  || 1;
     document.getElementById('cfg-pkg-dir').value      = cfg.pkg_output_dir || '';
+    document.getElementById('cfg-thumb-source').value  = cfg.thumb_source_dir || '';
     document.getElementById('cfg-path-ffmpeg').value   = cfg.path_ffmpeg   || '';
     document.getElementById('cfg-path-nihav').value    = cfg.path_nihav    || '';
     document.getElementById('cfg-path-sx').value       = cfg.path_sx       || '';
@@ -826,6 +827,7 @@ function collectSettings() {
     pkg_naming:      document.getElementById('cfg-pkg-naming').value,
     pkg_counter:     parseInt(document.getElementById('cfg-pkg-counter').value) || 1,
     pkg_output_dir:  document.getElementById('cfg-pkg-dir').value.trim(),
+    thumb_source_dir: document.getElementById('cfg-thumb-source').value.trim(),
     path_ffmpeg:     document.getElementById('cfg-path-ffmpeg').value.trim(),
     path_nihav:      document.getElementById('cfg-path-nihav').value.trim(),
     path_sx:         document.getElementById('cfg-path-sx').value.trim(),

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WW Video Toolkit</title>
 <link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="data:,">
 </head>
 <body>
 
@@ -423,6 +424,17 @@
       <div class="pkg-preview-row" id="cfg-pkg-preview-row">
         <span class="pkg-preview-label">Example filename:</span>
         <code class="pkg-preview-name" id="cfg-pkg-preview">ldgr-WW-001.package</code>
+      </div>
+
+      <div class="settings-section-title" style="margin-top:24px">Thumbnail auto-import</div>
+      <div class="field-group" style="margin-top:6px">
+        <label class="field-label">Thumbnail source folder <span class="hint">leave blank to extract from video</span></label>
+        <input class="input input-path" id="cfg-thumb-source" type="text"
+               placeholder="X:\RULE34\XXX\thumb">
+        <p class="hint" style="margin-top:6px">
+          On import, the last number in the filename is matched to a <code>.jpg</code> / <code>.png</code> in this folder.<br>
+          e.g. <code>rule34xxx-17088926.mp4</code> → <code>17088926.jpg</code>
+        </p>
       </div>
 
       <div class="settings-section-title" style="margin-top:24px">Tool paths</div>

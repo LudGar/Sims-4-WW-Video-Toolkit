@@ -38,6 +38,27 @@ def _video_out_dir(video) -> str:
     return d
 
 
+def _find_external_thumb(stem: str, cfg: dict) -> str:
+    """
+    Look for a pre-rendered thumbnail in thumb_source_dir by matching the
+    last numeric sequence in the filename stem to a file in the folder.
+    e.g. 'rule34xxx-17088926' → '17088926.jpg' in the configured folder.
+    Returns the full path if found, otherwise ''.
+    """
+    folder = cfg.get("thumb_source_dir", "").strip()
+    if not folder or not os.path.isdir(folder):
+        return ""
+    nums = re.findall(r"\d+", stem)
+    if not nums:
+        return ""
+    candidate = nums[-1]   # last (usually the ID) numeric run
+    for ext in (".jpg", ".jpeg", ".png", ".webp"):
+        p = os.path.join(folder, candidate + ext)
+        if os.path.exists(p):
+            return p
+    return ""
+
+
 # ── Default / persisted app settings ──────────────────────────────────────────
 _DEFAULT_SETTINGS = {
     "author":          "",
@@ -60,6 +81,8 @@ _DEFAULT_SETTINGS = {
     "path_quickbms":   "",
     "path_bms":        "",
     "path_texconv":    "",
+    # Thumbnail auto-import
+    "thumb_source_dir": "",  # folder of pre-rendered thumbnails (e.g. X:\RULE34\XXX\thumb)
 }
 
 
@@ -191,9 +214,16 @@ def _ingest(src_path: str, original_name: str) -> Video:
     db.session.add(v)
     db.session.flush()
 
-    thumb = os.path.join(THUMB_DIR, f"{v.id}.jpg")
-    if extract_thumbnail(src_path, thumb):
+    ext_thumb = _find_external_thumb(stem, cfg)
+    if ext_thumb:
+        ext = os.path.splitext(ext_thumb)[1].lower() or ".jpg"
+        thumb = os.path.join(THUMB_DIR, f"{v.id}{ext}")
+        shutil.copy2(ext_thumb, thumb)
         v.thumbnail_path = thumb
+    else:
+        thumb = os.path.join(THUMB_DIR, f"{v.id}.jpg")
+        if extract_thumbnail(src_path, thumb):
+            v.thumbnail_path = thumb
 
     dur = probe_duration(src_path)
     if dur:
